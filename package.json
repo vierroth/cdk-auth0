@@ -1,6 +1,6 @@
 {
   "name": "@flit/cdk-auth0",
-  "version": "1.10.0",
+  "version": "1.10.1",
   "description": "A collection of AWS CDK constructs to manager your Auth0 resources programmatically",
   "keywords": [
     "aws",
@@ -26,6 +26,7 @@
     "email": "luis@jumper.de",
     "url": "https://github.com/p-mercury"
   },
+  "type": "module",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "files": [
