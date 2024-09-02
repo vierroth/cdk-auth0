@@ -1,6 +1,6 @@
 {
   "name": "@flit/cdk-auth0",
-  "version": "1.9.3",
+  "version": "1.10.0",
   "description": "A collection of AWS CDK constructs to manager your Auth0 resources programmatically",
   "keywords": [
     "aws",
@@ -10,7 +10,9 @@
     "auth0",
     "oauth",
     "oauth2",
-    "authentication"
+    "authentication",
+    "jwt",
+    "okta"
   ],
   "homepage": "https://github.com/jumper-de/cdk-auth0",
   "bugs": "https://github.com/jumper-de/cdk-auth0/issues",
@@ -55,7 +57,7 @@
     "auth0": "^4.4.1"
   },
   "devDependencies": {
-    "@aws-sdk/client-secrets-manager": "^3.592.0",
+    "@aws-sdk/client-secrets-manager": "^3.621.0",
     "@types/aws-lambda": "^8.10.138",
     "@types/node": "^20.14.2",
     "aws-cdk-lib": "^2.100.0",

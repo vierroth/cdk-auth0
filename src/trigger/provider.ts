@@ -10,7 +10,17 @@ export class Provider extends AwsProvider {
   constructor(scope: Construct, id: string) {
     super(scope, id, {
       onEventHandler: new LambdaBase(scope, `${id}OnEventHandler`, {
-        entry: join(__dirname, "./../../src/trigger/handler.ts"),
+        entry: join(
+          (() => {
+            try {
+              return __dirname;
+            } catch (_) {
+              // @ts-ignore
+              return import.meta.dirname;
+            }
+          })(),
+          "./../../src/trigger/handler.ts",
+        ),
       }),
       role: new LambdaRole(scope, `${id}Role`),
     });
