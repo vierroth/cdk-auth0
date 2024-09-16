@@ -38,7 +38,14 @@ export class Provider extends AwsProvider {
         new PolicyStatement({
           effect: Effect.ALLOW,
           actions: ["events:DescribeConnection", "events:UpdateConnection"],
-          resources: [props.clientConnection.connectionArn],
+          resources: [
+            `arn:aws:events:${Stack.of(provider).region}:${
+              Stack.of(provider).account
+            }:connection/${props.clientConnection.connectionName}`,
+            `arn:aws:events:${Stack.of(provider).region}:${
+              Stack.of(provider).account
+            }:connection/${props.clientConnection.connectionName}/*`,
+          ],
         }),
       );
       provider.onEventHandler.role!.addToPrincipalPolicy(
@@ -47,7 +54,7 @@ export class Provider extends AwsProvider {
           actions: [
             "secretsmanager:DescribeSecret",
             "secretsmanager:GetSecretValue",
-            "secretsmanager:UpdateSecret",
+            "secretsmanager:PutSecretValue",
           ],
           resources: [props.clientConnection.connectionSecretArn],
         }),
