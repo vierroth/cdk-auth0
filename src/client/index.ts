@@ -4,6 +4,7 @@ import { ISecret, Secret } from "aws-cdk-lib/aws-secretsmanager";
 
 import { Auth0Props } from "../auth0-props";
 import { Provider } from "./provider";
+import { Authorization, Connection, IConnection } from "aws-cdk-lib/aws-events";
 
 export interface JwtProps {
   /**
@@ -208,22 +209,51 @@ export interface ClientProps extends Auth0Props {
  * @category Constructs
  */
 export class Client extends CustomResource {
+  /**
+   * The ID of the Auth0 client
+   */
   public readonly clientId = this.getAttString("clientId");
+  /**
+   * A secret instance containing the secret value of the Auth0 client
+   */
   public readonly clientSecret: ISecret;
+  /**
+   * The domain of the Auth0 client
+   */
   public readonly clientDomain = this.getAttString("clientDomain");
+  /**
+   * If the `grantTypes` include `"client_credentials"` this will automatically
+   * generate an `Event Bridge Connection` for the coresponding client which
+   * can be used to make `Step Function` api calls to Auth0
+   */
+  public readonly clientConnection?: IConnection;
 
   constructor(scope: Construct, id: string, props: ClientProps) {
     const clientSecretSecret = new Secret(scope, `${id}Secret`);
+
+    let clientConnectionConnection = undefined;
+    if (props.grantTypes?.includes("client_credentials")) {
+      clientConnectionConnection = new Connection(scope, `${id}Connection`, {
+        authorization: Authorization.apiKey(
+          "test",
+          new Secret(scope, `${id}ConnectionSecret`).secretValue,
+        ),
+      });
+    }
 
     super(scope, id, {
       resourceType: "Custom::Auth0Client",
       serviceToken: Provider.getOrCreate(scope, {
         apiSecret: props.apiSecret,
-        clientSecretSecret,
+        clientSecret: clientSecretSecret,
+        clientConnection: clientConnectionConnection,
       }),
       properties: {
         secretName: props.apiSecret.secretName,
-        clientSecretSecretName: clientSecretSecret.secretName,
+        clientSecretName: clientSecretSecret.secretName,
+        clientConnectioName: clientConnectionConnection
+          ? clientConnectionConnection.connectionName
+          : undefined,
         name:
           props.name ||
           `${Names.uniqueResourceName(scope, {
@@ -278,5 +308,9 @@ export class Client extends CustomResource {
     });
 
     this.clientSecret = clientSecretSecret;
+
+    if (props.grantTypes?.includes("client_credentials")) {
+      this.clientConnection = clientConnectionConnection as IConnection;
+    }
   }
 }
