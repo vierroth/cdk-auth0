@@ -42,6 +42,14 @@ export class Provider extends AwsProvider {
               actions: ["events:DescribeConnection", "events:UpdateConnection"],
               resources: [props.clientConnection.connectionArn],
             }),
+            new PolicyStatement({
+              effect: Effect.ALLOW,
+              actions: [
+                "secretsmanager:DescribeSecret",
+                "secretsmanager:GetSecretValue",
+              ],
+              resources: [props.clientConnection.connectionSecretArn],
+            }),
           ],
         }),
       );
