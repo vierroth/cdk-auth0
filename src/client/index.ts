@@ -4,47 +4,46 @@ import { ISecret, Secret } from "aws-cdk-lib/aws-secretsmanager";
 
 import { Auth0Props } from "../auth0-props";
 import { Provider } from "./provider";
-import { Authorization, Connection, IConnection } from "aws-cdk-lib/aws-events";
 
 export interface JwtProps {
   /**
-   * Algorithm used to sign JWTs. Can be HS256 or RS256. PS256 available via addon
+   * Algorithm used to sign JWTs. Can be HS256 or RS256. PS256 available via addon.
    */
   readonly alg: "HS256" | "RS256" | "PS256";
 }
 
 export interface RefreshTokenProps {
   /**
-   * @default rotating
+   * @defaultValue `"rotating"`
    */
   readonly rotationType?: "rotating" | "non-rotating";
   /**
-   * @default expiring
+   * @defaultValue `"expiring"`
    */
   readonly expirationType?: "expiring" | "non-expiring";
   /**
    * Period (in seconds) where the previous refresh token can be exchanged without triggering breach detection
-   * @default 0
+   * @defaultValue `0`
    */
   readonly leeway?: Duration;
   /**
    * Period (in seconds) for which refresh tokens will remain valid
-   * @default 30 days
+   * @defaultValue `30 days`
    */
   readonly tokenLifetime?: Duration;
   /**
    * Prevents tokens from having a set lifetime when true (takes precedence over token_lifetime values)
-   * @default false
+   * @defaultValue `false`
    */
   readonly infiniteTokenLifetime?: boolean;
   /**
    * Period (in seconds) for which refresh tokens will remain valid without use
-   * @default 7 days
+   * @defaultValue `7 days`
    */
   readonly idleTokenLifetime?: Duration;
   /**
    * Prevents tokens from expiring without use when true (takes precedence over idle_token_lifetime values)
-   * @default false
+   * @defaultValue `false`
    */
   readonly infiniteIdleTokenLifetime?: boolean;
 }
@@ -92,6 +91,7 @@ export interface ClientProps extends Auth0Props {
   readonly allowedLogoutUrls?: Array<string>;
   /**
    * List of grant types supported for this application. Can include authorization_code, implicit, refresh_token, client_credentials, password, http://auth0.com/oauth/grant-type/password-realm, http://auth0.com/oauth/grant-type/mfa-oob, http://auth0.com/oauth/grant-type/mfa-otp, http://auth0.com/oauth/grant-type/mfa-recovery-code, and urn:ietf:params:oauth:grant-type:device_code
+   * @defaultValue `["implicit", "authorization_code"]`
    */
   readonly grantTypes?: Array<
     | "authorization_code"
@@ -107,7 +107,7 @@ export interface ClientProps extends Auth0Props {
   >;
   /**
    * Defines the requested authentication method for the token endpoint. Can be none (public client without a client secret), client_secret_post (client uses HTTP POST parameters), or client_secret_basic (client uses HTTP Basic)
-   * @default none
+   * @defaultValue `"none"`
    */
   readonly tokenEndpointAuthMethod?:
     | "none"
@@ -116,7 +116,7 @@ export interface ClientProps extends Auth0Props {
   /**
    * Type of client used to determine which settings are applicable
    */
-  readonly appType:
+  readonly appType?:
     | "native"
     | "spa"
     | "regular_web"
@@ -194,10 +194,12 @@ export interface ClientProps extends Auth0Props {
   readonly refreshToken?: RefreshTokenProps;
   /**
    * Defines how to proceed during an authentication transaction with regards an organization. Can be deny (default), allow or require
+   * @defaultValue `"deny"`
    */
   readonly organizationUsage?: "deny" | "allow" | "require";
   /**
    * Defines how to proceed during an authentication transaction when client.organization_usage: 'require'. Can be no_prompt (default), pre_login_prompt or post_login_prompt. post_login_prompt requires oidc_conformant: true
+   * @defaultValue `"no_prompt"`
    */
   readonly organizationRequireBehavior?:
     | "no_prompt"
@@ -221,39 +223,19 @@ export class Client extends CustomResource {
    * The domain of the Auth0 client
    */
   public readonly clientDomain = this.getAttString("clientDomain");
-  /**
-   * If the `grantTypes` include `"client_credentials"` this will automatically
-   * generate an `Event Bridge Connection` for the coresponding client which
-   * can be used to make `Step Function` api calls to Auth0
-   */
-  public readonly clientConnection?: IConnection;
 
   constructor(scope: Construct, id: string, props: ClientProps) {
     const clientSecretSecret = new Secret(scope, `${id}Secret`);
-
-    let clientConnectionConnection = undefined;
-    if (props.grantTypes?.includes("client_credentials")) {
-      clientConnectionConnection = new Connection(scope, `${id}Connection`, {
-        authorization: Authorization.apiKey(
-          "test",
-          new Secret(scope, `${id}ConnectionSecret`).secretValue,
-        ),
-      });
-    }
 
     super(scope, id, {
       resourceType: "Custom::Auth0Client",
       serviceToken: Provider.getOrCreate(scope, {
         apiSecret: props.apiSecret,
         clientSecret: clientSecretSecret,
-        clientConnection: clientConnectionConnection,
       }),
       properties: {
         secretName: props.apiSecret.secretName,
         clientSecretName: clientSecretSecret.secretName,
-        clientConnectioName: clientConnectionConnection
-          ? clientConnectionConnection.connectionName
-          : undefined,
         name:
           props.name ||
           `${Names.uniqueResourceName(scope, {
@@ -302,15 +284,12 @@ export class Client extends CustomResource {
                 props.refreshToken?.infiniteIdleTokenLifetime || false,
             }
           : undefined,
-        organizationUsage: props.organizationUsage,
-        organizationRequireBehavior: props.organizationRequireBehavior,
+        organizationUsage: props.organizationUsage || "deny",
+        organizationRequireBehavior:
+          props.organizationRequireBehavior || "no_prompt",
       },
     });
 
     this.clientSecret = clientSecretSecret;
-
-    if (props.grantTypes?.includes("client_credentials")) {
-      this.clientConnection = clientConnectionConnection as IConnection;
-    }
   }
 }

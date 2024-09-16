@@ -3,11 +3,6 @@ import {
   SecretsManagerClient,
   UpdateSecretCommand,
 } from "@aws-sdk/client-secrets-manager";
-import {
-  DeauthorizeConnectionCommand,
-  EventBridgeClient,
-  UpdateConnectionCommand,
-} from "@aws-sdk/client-eventbridge";
 import { ManagementClient } from "auth0";
 
 import type { ENV } from "./../lambda-base";
@@ -18,10 +13,6 @@ declare global {
     interface ProcessEnv extends ENV {}
   }
 }
-
-const EVENT_BRIDGE = new EventBridgeClient({
-  region: process.env.AWS_REGION,
-});
 
 const SECRETS_MANAGER = new SecretsManagerClient({
   region: process.env.AWS_REGION,
@@ -103,39 +94,6 @@ export async function handler(event: CdkCustomResourceEvent) {
             event.ResourceProperties.organizationRequireBehavior,
         })
       ).data;
-
-      if (event.ResourceProperties.clientConnectioName) {
-        await EVENT_BRIDGE.send(
-          new UpdateConnectionCommand({
-            Name: event.ResourceProperties.clientConnectioName,
-            AuthorizationType: "OAUTH_CLIENT_CREDENTIALS",
-            AuthParameters: {
-              OAuthParameters: {
-                AuthorizationEndpoint: `https://${auth0Api.domain}/oauth/token`,
-                HttpMethod: "POST",
-                ClientParameters: {
-                  ClientID: client.client_id,
-                  ClientSecret: client.client_secret,
-                },
-                OAuthHttpParameters: {
-                  BodyParameters: [
-                    {
-                      Key: "audience",
-                      Value: `https://${auth0Api.domain}/api/v2/`,
-                      IsValueSecret: false,
-                    },
-                    {
-                      Key: "grant_type",
-                      Value: "client_credentials",
-                      IsValueSecret: false,
-                    },
-                  ],
-                },
-              },
-            },
-          }),
-        );
-      }
 
       return {
         PhysicalResourceId: client.client_id,
@@ -219,39 +177,6 @@ export async function handler(event: CdkCustomResourceEvent) {
         await auth0.clients.get({ client_id: event.PhysicalResourceId })
       ).data;
 
-      if (event.ResourceProperties.clientConnectioName) {
-        await EVENT_BRIDGE.send(
-          new UpdateConnectionCommand({
-            Name: event.ResourceProperties.clientConnectioName,
-            AuthorizationType: "OAUTH_CLIENT_CREDENTIALS",
-            AuthParameters: {
-              OAuthParameters: {
-                AuthorizationEndpoint: `https://${auth0Api.domain}/oauth/token`,
-                HttpMethod: "POST",
-                ClientParameters: {
-                  ClientID: client.client_id,
-                  ClientSecret: client.client_secret,
-                },
-                OAuthHttpParameters: {
-                  BodyParameters: [
-                    {
-                      Key: "audience",
-                      Value: `https://${auth0Api.domain}/api/v2/`,
-                      IsValueSecret: false,
-                    },
-                    {
-                      Key: "grant_type",
-                      Value: "client_credentials",
-                      IsValueSecret: false,
-                    },
-                  ],
-                },
-              },
-            },
-          }),
-        );
-      }
-
       return {
         PhysicalResourceId: event.PhysicalResourceId,
         Data: {
@@ -270,14 +195,6 @@ export async function handler(event: CdkCustomResourceEvent) {
     }
     case "Delete": {
       await auth0.clients.delete({ client_id: event.PhysicalResourceId });
-
-      if (event.ResourceProperties.clientConnectioName) {
-        await EVENT_BRIDGE.send(
-          new DeauthorizeConnectionCommand({
-            Name: event.ResourceProperties.clientConnectioName,
-          }),
-        );
-      }
 
       return {
         PhysicalResourceId: event.PhysicalResourceId,

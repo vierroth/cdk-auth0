@@ -1,5 +1,5 @@
 import { Construct } from "constructs";
-import { CustomResource } from "aws-cdk-lib";
+import { CustomResource, Names } from "aws-cdk-lib";
 
 import { Auth0Props } from "../auth0-props";
 import { Provider } from "./provider";
@@ -21,22 +21,61 @@ export interface ActionTriggerProps {
 }
 
 export interface ActionDependencyProps {
+  /**
+   * The name of the npm module (e.g. lodash).
+   */
   readonly name: string;
+  /**
+   *  The npm module version (e.g. 4.17.1).
+   */
   readonly version: string;
+  /**
+   * An optional value used primarily for private npm registries.
+   */
   readonly registryUrl?: string;
 }
 
 export interface ActionSecretProps {
+  /**
+   * The name of the particular secret (e.g. `API_KEY`).
+   */
   readonly name: string;
+  /**
+   * The value of the particular secret (e.g. `secret123`).
+   * A secret's value can only be set upon creation.
+   * A secret's value will never be returned by the API.
+   */
   readonly value: string;
 }
 
 export interface ActionProps extends Auth0Props {
-  readonly name: string;
-  readonly code: string;
-  readonly dependencies?: Array<ActionDependencyProps>;
+  /**
+   * The name of an action.
+   * @defaultValue generated name
+   */
+  readonly name?: string;
+  /**
+   * The list of triggers that this action supports.
+   * At this time, an action can only target a single trigger at a time.
+   */
   readonly supportedTriggers: Array<ActionTriggerProps>;
-  readonly runtime: "node12" | "node16" | "node18" | "node18-actions";
+  /**
+   * The source code of the action.
+   */
+  readonly code: string;
+  /**
+   * The list of third party npm modules, and their versions,
+   * that this action depends on.
+   */
+  readonly dependencies?: Array<ActionDependencyProps>;
+  /**
+   * The Node runtime
+   * @defaultValue `"node18-actions"`
+   */
+  readonly runtime?: "node12" | "node16" | "node18" | "node18-actions";
+  /**
+   * The list of secrets that are included in an action or a version of an action
+   */
   readonly secrets?: Array<ActionSecretProps>;
 }
 
@@ -53,11 +92,17 @@ export class Action extends CustomResource {
       serviceToken: Provider.getOrCreate(scope, props.apiSecret),
       properties: {
         secretName: props.apiSecret.secretName,
-        name: props.name,
+        name:
+          props.name ||
+          `${Names.uniqueResourceName(scope, {
+            maxLength: 127 - id.length,
+            allowedSpecialCharacters: "-",
+            separator: "-",
+          })}-${id}`,
         code: props.code,
         dependencies: props.dependencies,
         supportedTriggers: props.supportedTriggers,
-        runtime: props.runtime,
+        runtime: props.runtime || "node18-actions",
         secrets: props.secrets,
       },
     });

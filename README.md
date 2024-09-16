@@ -1,4 +1,4 @@
-This package exposes a collection of [AWS CDK](https://docs.aws.amazon.com/cdk/api/v2/) constructs to manage [Auth0](https://auth0.com) resources programmatically, enabling tighter integration with [CDK](https://docs.aws.amazon.com/cdk/api/v2/) and giving you all the benefits of infrastructure as code together with [Auth0's](https://auth0.com) large feature set.
+This collection of [CDK](https://docs.aws.amazon.com/cdk/api/v2/) constructs allows you to manage your [Auth0](https://auth0.com) resources programmatically, enabling tighter integration with [CDK](https://docs.aws.amazon.com/cdk/api/v2/) and giving you all the benefits of infrastructure as code together with [Auth0's](https://auth0.com) large feature set.
 
 The constructs provided by this library work in the same way any native AWS CDK constructs do, and expose all of the parameters that the [Auth0 Management API](https://auth0.com/docs/api/management/v2) exposes.
 
@@ -64,16 +64,12 @@ export class ExampleStack extends Stack {
 
     const resourceServer = new ResourceServer(this, "ResourceServer", {
       apiSecret: auth0Secret,
-      name: "web-api",
-      identifier: "web-api",
-      tokenLifetime: Duration.minutes(2),
       enforcePolicies: true,
       allowOfflineAccess: true,
     });
 
     const webClient = new Client(this, "WebClient", {
       apiSecret: auth0Secret,
-      name: "web-client",
       appType: "regular_web",
       isFirstParty: true,
       tokenEndpointAuthMethod: "client_secret_basic",
@@ -103,8 +99,6 @@ export class ExampleStack extends Stack {
       actions: [
         new Action(this, "Auth0AugmentClaimAction", {
           apiSecret: auth0Secret,
-          name: "AugmentClaims",
-          runtime: "node18",
           supportedTriggers: [{ id: "post-login", version: "v3" }],
           code: `
             exports.onExecutePostLogin = async (event, api) => {
