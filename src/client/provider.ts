@@ -6,7 +6,7 @@ import { IConnection } from "aws-cdk-lib/aws-events";
 import { join } from "path";
 
 import { LambdaBase, LambdaRole } from "../lambda-base";
-import { Effect, Policy, PolicyStatement } from "aws-cdk-lib/aws-iam";
+import { Effect, PolicyStatement } from "aws-cdk-lib/aws-iam";
 
 export interface getOrCreateProps {
   readonly apiSecret: ISecret;
@@ -34,24 +34,22 @@ export class Provider extends AwsProvider {
     props.clientSecret.grantWrite(provider.onEventHandler);
 
     if (props.clientConnection) {
-      provider.onEventHandler.role!.attachInlinePolicy(
-        new Policy(provider, "EventBridgeConnection", {
-          statements: [
-            new PolicyStatement({
-              effect: Effect.ALLOW,
-              actions: ["events:DescribeConnection", "events:UpdateConnection"],
-              resources: [props.clientConnection.connectionArn],
-            }),
-            new PolicyStatement({
-              effect: Effect.ALLOW,
-              actions: [
-                "secretsmanager:DescribeSecret",
-                "secretsmanager:GetSecretValue",
-                "secretsmanager:UpdateSecret",
-              ],
-              resources: [props.clientConnection.connectionSecretArn],
-            }),
+      provider.onEventHandler.role!.addToPrincipalPolicy(
+        new PolicyStatement({
+          effect: Effect.ALLOW,
+          actions: ["events:DescribeConnection", "events:UpdateConnection"],
+          resources: [props.clientConnection.connectionArn],
+        }),
+      );
+      provider.onEventHandler.role!.addToPrincipalPolicy(
+        new PolicyStatement({
+          effect: Effect.ALLOW,
+          actions: [
+            "secretsmanager:DescribeSecret",
+            "secretsmanager:GetSecretValue",
+            "secretsmanager:UpdateSecret",
           ],
+          resources: [props.clientConnection.connectionSecretArn],
         }),
       );
     }
