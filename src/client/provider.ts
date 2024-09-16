@@ -47,6 +47,7 @@ export class Provider extends AwsProvider {
               actions: [
                 "secretsmanager:DescribeSecret",
                 "secretsmanager:GetSecretValue",
+                "secretsmanager:UpdateSecret",
               ],
               resources: [props.clientConnection.connectionSecretArn],
             }),
