@@ -30,30 +30,32 @@ export async function handler(event: CdkCustomResourceEvent) {
   switch (event.RequestType) {
     case "Create":
     case "Update": {
-      await auth0.emailTemplates.update({ templateName:
-        event.ResourceProperties.template },
+      await auth0.emailTemplates.update(
+        { templateName: event.ResourceProperties.template },
         {
-        template: event.ResourceProperties.template,
-        body: event.ResourceProperties.body,
-        from: event.ResourceProperties.from,
-        resultUrl: event.ResourceProperties.resultUrl,
-        subject: event.ResourceProperties.subject,
-        syntax: event.ResourceProperties.syntax,
-        urlLifetimeInSeconds:
-          Number(event.ResourceProperties.urlLifetimeInSeconds),
-        includeEmailInRedirect:
-          event.ResourceProperties.includeEmailInRedirect === "true",
-        enabled: event.ResourceProperties.enabled === "true",
-      });
+          template: event.ResourceProperties.template,
+          body: event.ResourceProperties.body,
+          from: event.ResourceProperties.from,
+          resultUrl: event.ResourceProperties.resultUrl,
+          subject: event.ResourceProperties.subject,
+          syntax: event.ResourceProperties.syntax,
+          urlLifetimeInSeconds: Number(
+            event.ResourceProperties.urlLifetimeInSeconds,
+          ),
+          includeEmailInRedirect:
+            event.ResourceProperties.includeEmailInRedirect === "true",
+          enabled: event.ResourceProperties.enabled === "true",
+        },
+      );
 
       return {
         PhysicalResource: event.ResourceProperties.template,
-      }
+      };
     }
     case "Delete": {
       return {
         PhysicalResource: event.ResourceProperties.PhysicalResourceId,
-      }
+      };
     }
     default: {
       throw new Error("Invalid request type");

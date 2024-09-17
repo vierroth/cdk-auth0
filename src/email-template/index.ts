@@ -3,7 +3,7 @@ import { Construct } from "constructs";
 import { Auth0Props } from "../auth0-props";
 import { Provider } from "./provider";
 
-export interface EmailTemplateProps extends Auth0Props{
+export interface EmailTemplateProps extends Auth0Props {
   /**
    * Template name. Can be verify_email, verify_email_by_code, reset_email, reset_email_by_code, welcome_email,
    * blocked_account, stolen_credentials, enrollment_email, mfa_oob_code, user_invitation, change_password (legacy),
@@ -74,11 +74,11 @@ export class EmailTemplate extends CustomResource {
         from: props.from,
         resultUrl: props.resultUrl,
         subject: props.subject,
-        syntax: props.syntax || 'liquid',
+        syntax: props.syntax || "liquid",
         urlLifetimeInSeconds: props?.urlLifetimeInSeconds || 432000,
         includeEmailInRedirect: props?.includeEmailInRedirect || true,
         enabled: props.enabled,
-      }
+      },
     });
   }
 }
