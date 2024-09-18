@@ -6,6 +6,7 @@ export * from "./client-grant";
 export * from "./connection";
 export * from "./custom-domain";
 export * from "./email-provider";
+export * from "./email-template";
 export * from "./organization";
 export * from "./prompt-settings";
 export * from "./resource-server";
