@@ -284,9 +284,8 @@ export class Client extends CustomResource {
                 props.refreshToken?.infiniteIdleTokenLifetime || false,
             }
           : undefined,
-        organizationUsage: props.organizationUsage || "deny",
-        organizationRequireBehavior:
-          props.organizationRequireBehavior || "no_prompt",
+        organizationUsage: props.organizationUsage,
+        organizationRequireBehavior: props.organizationRequireBehavior,
       },
     });
 

@@ -45,6 +45,20 @@ export async function handler(event: CdkCustomResourceEvent) {
       };
     }
     case "Update": {
+      if (
+        event.OldResourceProperties.clinetId !==
+        event.ResourceProperties.clinetId
+      ) {
+        throw new Error("Can't modify client grant clinetId");
+      }
+
+      if (
+        event.OldResourceProperties.audience !==
+        event.ResourceProperties.audience
+      ) {
+        throw new Error("Can't modify client grant audience");
+      }
+
       await auth0.clientGrants.update(
         { id: event.PhysicalResourceId },
         {

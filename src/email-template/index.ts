@@ -1,4 +1,4 @@
-import { CustomResource } from "aws-cdk-lib";
+import { CustomResource, Duration } from "aws-cdk-lib";
 import { Construct } from "constructs";
 import { Auth0Props } from "../auth0-props";
 import { Provider } from "./provider";
@@ -28,7 +28,7 @@ export interface EmailTemplateProps extends Auth0Props {
   /**
    * Senders from email address.
    */
-  readonly from: string;
+  readonly emailFrom: string;
   /**
    * URL to redirect the user to after a successful action.
    */
@@ -39,18 +39,18 @@ export interface EmailTemplateProps extends Auth0Props {
   readonly subject: string;
   /**
    * Syntax of the template body.
-   * @default liquid
+   * @defaultValue `"liquid"`
    */
   readonly syntax?: string;
   /**
    * Lifetime in seconds that the link within the email will be valid for.
-   * @default 432000 (5 days)
+   * @defaultValue `5 days`
    */
-  readonly urlLifetimeInSeconds?: number;
+  readonly urlLifetime?: Duration;
   /**
    * Whether the reset_email and verify_email templates should include the user's email address as the email parameter
    * in the returnUrl (true) or whether no email address should be included in the redirect (false). Defaults to true.
-   * @default true
+   * @defaultValue `true`
    */
   readonly includeEmailInRedirect?: boolean;
   /**
@@ -71,11 +71,11 @@ export class EmailTemplate extends CustomResource {
         secretName: props.apiSecret.secretName,
         template: props.template,
         body: props.body,
-        from: props.from,
+        from: props.emailFrom,
         resultUrl: props.resultUrl,
         subject: props.subject,
         syntax: props.syntax || "liquid",
-        urlLifetimeInSeconds: props?.urlLifetimeInSeconds || 432000,
+        urlLifetimeInSeconds: props.urlLifetime?.toSeconds() || 432000,
         includeEmailInRedirect: props?.includeEmailInRedirect || true,
         enabled: props.enabled,
       },
