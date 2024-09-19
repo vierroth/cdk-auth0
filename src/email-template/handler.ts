@@ -28,29 +28,59 @@ export async function handler(event: CdkCustomResourceEvent) {
   console.log(`Event: ${JSON.stringify(event)}`);
 
   switch (event.RequestType) {
-    case "Create":
+    case "Create": {
+      const body  = {
+        template: event.ResourceProperties.template,
+        body: event.ResourceProperties.body,
+        from: event.ResourceProperties.from,
+        resultUrl: event.ResourceProperties.resultUrl,
+        subject: event.ResourceProperties.subject,
+        syntax: event.ResourceProperties.syntax,
+        urlLifetimeInSeconds:
+          Number(event.ResourceProperties.urlLifetimeInSeconds),
+        includeEmailInRedirect:
+          event.ResourceProperties.includeEmailInRedirect === "true",
+        enabled: event.ResourceProperties.enabled === "true",
+      };
+
+      try {
+        await auth0.emailTemplates.create(body);
+      } catch (error: any) {
+        if(error.statusCode === 409) {
+          console.info(`${event.ResourceProperties.template} already created, updating email template.`);
+          await auth0.emailTemplates.update({ templateName:
+            event.ResourceProperties.template}, body
+          );
+        } else {
+          console.error(JSON.stringify(error));
+          throw error;
+        }
+      }
+
+      return {
+        PhysicalResource: event.ResourceProperties.template,
+      }
+    }
     case "Update": {
-      await auth0.emailTemplates.update(
-        { templateName: event.ResourceProperties.template },
-        {
+      await auth0.emailTemplates.update({ templateName:
+          event.ResourceProperties.template}, {
           template: event.ResourceProperties.template,
           body: event.ResourceProperties.body,
           from: event.ResourceProperties.from,
           resultUrl: event.ResourceProperties.resultUrl,
           subject: event.ResourceProperties.subject,
           syntax: event.ResourceProperties.syntax,
-          urlLifetimeInSeconds: Number(
-            event.ResourceProperties.urlLifetimeInSeconds,
-          ),
+          urlLifetimeInSeconds:
+            Number(event.ResourceProperties.urlLifetimeInSeconds),
           includeEmailInRedirect:
             event.ResourceProperties.includeEmailInRedirect === "true",
           enabled: event.ResourceProperties.enabled === "true",
-        },
+        }
       );
 
       return {
         PhysicalResource: event.ResourceProperties.template,
-      };
+      }
     }
     case "Delete": {
       return {
