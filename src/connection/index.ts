@@ -10,8 +10,81 @@ interface ConnectionBaseProps extends Auth0Props {
   readonly displayName?: string;
   readonly name?: string;
   readonly deletionProtection?: boolean;
-  readonly strategy?: string;
+  /**
+   * The identity provider identifier for the connection
+   * @defaultValue `"auth0"`
+   */
+  readonly strategy?:
+    | "ad"
+    | "adfs"
+    | "amazon"
+    | "apple"
+    | "dropbox"
+    | "bitbucket"
+    | "aol"
+    | "auth0-oidc"
+    | "auth0"
+    | "baidu"
+    | "bitly"
+    | "box"
+    | "custom"
+    | "daccount"
+    | "dwolla"
+    | "email"
+    | "evernote-sandbox"
+    | "evernote"
+    | "exact"
+    | "facebook"
+    | "fitbit"
+    | "flickr"
+    | "github"
+    | "google-apps"
+    | "google-oauth2"
+    | "instagram"
+    | "ip"
+    | "line"
+    | "linkedin"
+    | "miicard"
+    | "oauth1"
+    | "oauth2"
+    | "office365"
+    | "oidc"
+    | "okta"
+    | "paypal"
+    | "paypal-sandbox"
+    | "pingfederate"
+    | "planningcenter"
+    | "renren"
+    | "salesforce-community"
+    | "salesforce-sandbox"
+    | "salesforce"
+    | "samlp"
+    | "sharepoint"
+    | "shopify"
+    | "sms"
+    | "soundcloud"
+    | "thecity-sandbox"
+    | "thecity"
+    | "thirtysevensignals"
+    | "twitter"
+    | "untappd"
+    | "vkontakte"
+    | "waad"
+    | "weibo"
+    | "windowslive"
+    | "wordpress"
+    | "yahoo"
+    | "yammer"
+    | "yandex";
+  /**
+   * The identifiers of the clients for which the connection is to be enabled.
+   * If the array is empty or the property is not specified, no clients are enabled
+   * @defaultValue `[]`
+   */
   readonly enabledClients?: Array<Client>;
+  /**
+   * @defaultValue `false`
+   */
   readonly isDomainConnection?: boolean;
   readonly disableSignup?: boolean;
 }

@@ -7,7 +7,7 @@ import { Provider } from "./provider";
 
 export interface JwtProps {
   /**
-   * Algorithm used to sign JWTs. Can be HS256 or RS256. PS256 available via addon.
+   * Algorithm used to sign JWTs. Can be HS256 or RS256. PS256 available via addon
    */
   readonly alg: "HS256" | "RS256" | "PS256";
 }

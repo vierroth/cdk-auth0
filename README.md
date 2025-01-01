@@ -6,7 +6,7 @@ The constructs provided by this library work in the same way any native AWS CDK 
 
 ### Installation
 
-The package is available on [NPM](https://www.npmjs.com) and can be installed using your package manager of choice:
+The package is available on [NPM](https://www.npmjs.com/package/@flit/cdk-auth0) and can be installed using your package manager of choice:
 
 ```bash
 npm i @flit/cdk-auth0
