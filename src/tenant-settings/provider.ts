@@ -7,23 +7,23 @@ import { join } from "path";
 import { LambdaBase, LambdaRole } from "../lambda-base";
 
 export class Provider extends AwsProvider {
-  constructor(scope: Construct, id: string) {
-    super(scope, id, {
-      onEventHandler: new LambdaBase(scope, `${id}OnEventHandler`, {
-        entry: join(__dirname, "./../../src/tenant-settings/handler.ts"),
-      }),
-      role: new LambdaRole(scope, `${id}Role`),
-    });
-  }
+	constructor(scope: Construct, id: string) {
+		super(scope, id, {
+			onEventHandler: new LambdaBase(scope, `${id}OnEventHandler`, {
+				entry: join(__dirname, "./../../src/tenant-settings/handler.ts"),
+			}),
+			role: new LambdaRole(scope, `${id}Role`),
+		});
+	}
 
-  static getOrCreate(scope: Construct, apiSecret: ISecret) {
-    const stack = Stack.of(scope);
-    const id = "Auth0TenantSettingsProvider";
-    const provider =
-      (stack.node.tryFindChild(id) as Provider) || new Provider(stack, id);
+	static getOrCreate(scope: Construct, apiSecret: ISecret) {
+		const stack = Stack.of(scope);
+		const id = "Auth0TenantSettingsProvider";
+		const provider =
+			(stack.node.tryFindChild(id) as Provider) || new Provider(stack, id);
 
-    apiSecret.grantRead(provider.onEventHandler);
+		apiSecret.grantRead(provider.onEventHandler);
 
-    return provider.serviceToken;
-  }
+		return provider.serviceToken;
+	}
 }

@@ -7,29 +7,29 @@ import { join } from "path";
 import { LambdaBase, LambdaRole } from "../lambda-base";
 
 export interface getOrCreateProps {
-  readonly apiSecret: ISecret;
-  readonly clientSecret: ISecret;
+	readonly apiSecret: ISecret;
+	readonly clientSecret: ISecret;
 }
 
 export class Provider extends AwsProvider {
-  constructor(scope: Construct, id: string) {
-    super(scope, id, {
-      onEventHandler: new LambdaBase(scope, `${id}OnEventHandler`, {
-        entry: join(__dirname, "./../../src/client/handler.ts"),
-      }),
-      role: new LambdaRole(scope, `${id}Role`),
-    });
-  }
+	constructor(scope: Construct, id: string) {
+		super(scope, id, {
+			onEventHandler: new LambdaBase(scope, `${id}OnEventHandler`, {
+				entry: join(__dirname, "./../../src/client/handler.ts"),
+			}),
+			role: new LambdaRole(scope, `${id}Role`),
+		});
+	}
 
-  static getOrCreate(scope: Construct, props: getOrCreateProps) {
-    const stack = Stack.of(scope);
-    const id = "Auth0ClientProvider";
-    const provider =
-      (stack.node.tryFindChild(id) as Provider) || new Provider(stack, id);
+	static getOrCreate(scope: Construct, props: getOrCreateProps) {
+		const stack = Stack.of(scope);
+		const id = "Auth0ClientProvider";
+		const provider =
+			(stack.node.tryFindChild(id) as Provider) || new Provider(stack, id);
 
-    props.apiSecret.grantRead(provider.onEventHandler);
-    props.clientSecret.grantWrite(provider.onEventHandler);
+		props.apiSecret.grantRead(provider.onEventHandler);
+		props.clientSecret.grantWrite(provider.onEventHandler);
 
-    return provider.serviceToken;
-  }
+		return provider.serviceToken;
+	}
 }
