@@ -57,10 +57,8 @@ export async function handler(event: CdkCustomResourceEvent) {
 						lifetime_in_seconds: parseInt(
 							event.ResourceProperties.jwt.tokenLifetime,
 						),
-						secret_encoded:
-							event.ResourceProperties.jwt.secretEncoded === "true",
 						alg: event.ResourceProperties.jwt.alg,
-					} as any,
+					},
 					sso: event.ResourceProperties.sso === "true",
 					cross_origin_authentication:
 						event.ResourceProperties.crossOriginAuthentication === "true",
@@ -140,10 +138,8 @@ export async function handler(event: CdkCustomResourceEvent) {
 						lifetime_in_seconds: parseInt(
 							event.ResourceProperties.jwt.tokenLifetime,
 						),
-						secret_encoded:
-							event.ResourceProperties.jwt.secretEncoded === "true",
 						alg: event.ResourceProperties.jwt.alg,
-					} as any,
+					},
 					sso: event.ResourceProperties.sso === "true",
 					cross_origin_authentication:
 						event.ResourceProperties.crossOriginAuthentication === "true",

@@ -12,11 +12,6 @@ export interface JwtProps {
 	 */
 	readonly tokenLifetime?: Duration;
 	/**
-	 * Whether the client secret is base64 encoded (true) or unencoded (false).
-	 * @default `false`
-	 */
-	readonly secretEncoded?: boolean;
-	/**
 	 * Algorithm used to sign JWTs. Can be HS256 or RS256. PS256 available via addon.
 	 * @default `"RS256"`
 	 */
@@ -273,7 +268,6 @@ export class Client extends CustomResource {
 				oidcConformant: props.oidcConformant || false,
 				jwt: {
 					tokenLifetime: props.jwt?.tokenLifetime?.toSeconds() || 3600,
-					secretEncoded: props.jwt?.secretEncoded || false,
 					alg: props.jwt?.alg || "RS256",
 				},
 				sso: props.sso || false,
