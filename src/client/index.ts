@@ -1,6 +1,6 @@
 import { Construct } from "constructs";
 import { CustomResource, Duration, Names } from "aws-cdk-lib";
-import { ISecret, Secret } from "aws-cdk-lib/aws-secretsmanager";
+import { Secret } from "aws-cdk-lib/aws-secretsmanager";
 
 import { Auth0Props } from "../auth0-props";
 import { Provider } from "./provider";
@@ -227,7 +227,7 @@ export class Client extends CustomResource {
 	/**
 	 * A secret instance containing the secret value of the Auth0 client
 	 */
-	public readonly clientSecret: ISecret;
+	public readonly clientSecret: Secret;
 	/**
 	 * The domain of the Auth0 client
 	 */
