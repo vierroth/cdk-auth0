@@ -11,7 +11,7 @@ export class Provider extends AwsProvider {
 			onEventHandler: new LambdaBase(scope, `${id}OnEventHandler`, {
 				entry: join(__dirname, "./../../src/email-template/handler.ts"),
 			}),
-			role: new LambdaRole(scope, `${id}Role`),
+			frameworkOnEventRole: new LambdaRole(scope, `${id}Role`),
 		});
 	}
 
