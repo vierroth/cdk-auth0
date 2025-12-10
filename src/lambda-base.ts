@@ -30,7 +30,7 @@ export class LambdaBase extends NodejsFunction {
 			runtime: Runtime.NODEJS_22_X,
 			architecture: Architecture.ARM_64,
 			timeout: Duration.minutes(2),
-			logGroup: new LogGroup(scope, "LogGroup", {
+			logGroup: new LogGroup(scope, `${id}LogGroup`, {
 				retention: RetentionDays.ONE_WEEK,
 			}),
 			paramsAndSecrets: ParamsAndSecretsLayerVersion.fromVersion(
