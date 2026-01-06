@@ -43,7 +43,7 @@ export async function handler(event: CdkCustomResourceEvent) {
 							.skipConsentForVerifiableFirstPartyClients === "true",
 					enforce_policies: event.ResourceProperties.enforcePolicies === "true",
 				})
-			).data;
+			);
 
 			return {
 				PhysicalResourceId: resourceServers.id,
@@ -56,7 +56,7 @@ export async function handler(event: CdkCustomResourceEvent) {
 		case "Update": {
 			const resourceServers = (
 				await auth0.resourceServers.update(
-					{ id: event.PhysicalResourceId },
+					event.PhysicalResourceId,
 					{
 						name: event.ResourceProperties.name || event.LogicalResourceId,
 						scopes: event.ResourceProperties.scopes,
@@ -73,7 +73,7 @@ export async function handler(event: CdkCustomResourceEvent) {
 							event.ResourceProperties.enforcePolicies === "true",
 					},
 				)
-			).data;
+			);
 
 			return {
 				PhysicalResourceId: event.PhysicalResourceId,
@@ -84,9 +84,7 @@ export async function handler(event: CdkCustomResourceEvent) {
 			};
 		}
 		case "Delete": {
-			await auth0.resourceServers.delete({
-				id: event.PhysicalResourceId,
-			});
+			await auth0.resourceServers.delete(event.PhysicalResourceId);
 
 			return {
 				PhysicalResourceId: event.PhysicalResourceId,

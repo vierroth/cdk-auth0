@@ -28,7 +28,7 @@ export async function handler(event: CdkCustomResourceEvent) {
 	switch (event.RequestType) {
 		case "Create": {
 			const id = (
-				await auth0.branding.createTheme({
+				await auth0.branding.themes.create({
 					displayName: event.ResourceProperties.displayName,
 					colors: {
 						base_focus_color: event.ResourceProperties.colors.baseFocusColor,
@@ -127,7 +127,7 @@ export async function handler(event: CdkCustomResourceEvent) {
 						page_layout: event.ResourceProperties.pageBackground.pageLayout,
 					},
 				})
-			).data.themeId;
+			).themeId;
 
 			return {
 				PhysicalResourceId: id,
@@ -137,8 +137,8 @@ export async function handler(event: CdkCustomResourceEvent) {
 			};
 		}
 		case "Update": {
-			await auth0.branding.updateTheme(
-				{ themeId: event.PhysicalResourceId },
+			await auth0.branding.themes.update(
+				event.PhysicalResourceId,
 				{
 					displayName: event.ResourceProperties.displayName,
 					colors: {
@@ -248,7 +248,7 @@ export async function handler(event: CdkCustomResourceEvent) {
 			};
 		}
 		case "Delete": {
-			await auth0.branding.deleteTheme({ themeId: event.PhysicalResourceId });
+			await auth0.branding.themes.delete(event.PhysicalResourceId);
 
 			return {
 				PhysicalResourceId: event.PhysicalResourceId,

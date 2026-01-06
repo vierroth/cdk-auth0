@@ -27,8 +27,8 @@ export async function handler(event: CdkCustomResourceEvent) {
 
 	switch (event.RequestType) {
 		case "Create": {
-			await auth0.actions.updateTriggerBindings(
-				{ triggerId: event.ResourceProperties.id },
+			await auth0.actions.triggers.bindings.updateMany(
+				event.ResourceProperties.id,
 				{
 					bindings: event.ResourceProperties.actions.map((action: string) => {
 						return { ref: { type: "action_id", value: action } };
@@ -39,8 +39,8 @@ export async function handler(event: CdkCustomResourceEvent) {
 			return;
 		}
 		case "Update": {
-			await auth0.actions.updateTriggerBindings(
-				{ triggerId: event.ResourceProperties.id },
+			await auth0.actions.triggers.bindings.updateMany(
+				event.ResourceProperties.id,
 				{
 					bindings: event.ResourceProperties.actions.map((action: string) => {
 						return { ref: { type: "action_id", value: action } };

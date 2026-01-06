@@ -40,13 +40,13 @@ export async function handler(event: CdkCustomResourceEvent) {
 					runtime: event.ResourceProperties.runtime,
 					secrets: event.ResourceProperties.secrets,
 				})
-			).data.id;
+			).id;
 
-			while ((await auth0.actions.get({ id: id })).data.status !== "built") {
+			while ((await auth0.actions.get(id)).status !== "built") {
 				await timeout(5000);
 			}
 
-			await auth0.actions.deploy({ id: id });
+			await auth0.actions.deploy(id);
 
 			return {
 				PhysicalResourceId: id,
@@ -57,7 +57,7 @@ export async function handler(event: CdkCustomResourceEvent) {
 		}
 		case "Update": {
 			await auth0.actions.update(
-				{ id: event.PhysicalResourceId },
+				event.PhysicalResourceId,
 				{
 					name: event.ResourceProperties.name,
 					code: event.ResourceProperties.code,
@@ -69,13 +69,13 @@ export async function handler(event: CdkCustomResourceEvent) {
 			);
 
 			while (
-				(await auth0.actions.get({ id: event.PhysicalResourceId })).data
+				(await auth0.actions.get(event.PhysicalResourceId))
 					.status !== "built"
 			) {
 				await timeout(5000);
 			}
 
-			await auth0.actions.deploy({ id: event.PhysicalResourceId });
+			await auth0.actions.deploy(event.PhysicalResourceId);
 
 			return {
 				PhysicalResourceId: event.PhysicalResourceId,
@@ -85,7 +85,7 @@ export async function handler(event: CdkCustomResourceEvent) {
 			};
 		}
 		case "Delete": {
-			await auth0.actions.delete({ id: event.PhysicalResourceId, force: true });
+			await auth0.actions.delete(event.PhysicalResourceId, { force: true });
 
 			return {
 				PhysicalResourceId: event.PhysicalResourceId,

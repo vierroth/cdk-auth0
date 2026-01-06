@@ -96,7 +96,7 @@ export async function handler(event: CdkCustomResourceEvent) {
 					organization_require_behavior:
 						event.ResourceProperties.organizationRequireBehavior,
 				})
-			).data;
+			);
 
 			return {
 				PhysicalResourceId: client.client_id,
@@ -116,7 +116,7 @@ export async function handler(event: CdkCustomResourceEvent) {
 		}
 		case "Update": {
 			await auth0.clients.update(
-				{ client_id: event.PhysicalResourceId },
+				event.PhysicalResourceId,
 				{
 					name: event.ResourceProperties.name || event.LogicalResourceId,
 					description: event.ResourceProperties.description,
@@ -180,8 +180,8 @@ export async function handler(event: CdkCustomResourceEvent) {
 			);
 
 			const client = (
-				await auth0.clients.get({ client_id: event.PhysicalResourceId })
-			).data;
+				await auth0.clients.get(event.PhysicalResourceId)
+			);
 
 			return {
 				PhysicalResourceId: event.PhysicalResourceId,
@@ -200,7 +200,7 @@ export async function handler(event: CdkCustomResourceEvent) {
 			};
 		}
 		case "Delete": {
-			await auth0.clients.delete({ client_id: event.PhysicalResourceId });
+			await auth0.clients.delete(event.PhysicalResourceId);
 
 			return {
 				PhysicalResourceId: event.PhysicalResourceId,

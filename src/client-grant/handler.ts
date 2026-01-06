@@ -35,7 +35,7 @@ export async function handler(event: CdkCustomResourceEvent) {
 						`https://${auth0Api.domain}/api/v2/`,
 					scope: event.ResourceProperties.scope,
 				})
-			).data.id;
+			).id;
 
 			return {
 				PhysicalResourceId: id,
@@ -60,7 +60,7 @@ export async function handler(event: CdkCustomResourceEvent) {
 			}
 
 			await auth0.clientGrants.update(
-				{ id: event.PhysicalResourceId },
+				event.PhysicalResourceId,
 				{
 					scope: event.ResourceProperties.scope,
 				},
@@ -74,9 +74,7 @@ export async function handler(event: CdkCustomResourceEvent) {
 			};
 		}
 		case "Delete": {
-			await auth0.clientGrants.delete({
-				id: event.PhysicalResourceId,
-			});
+			await auth0.clientGrants.delete(event.PhysicalResourceId);
 
 			return {
 				PhysicalResourceId: event.PhysicalResourceId,

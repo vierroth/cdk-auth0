@@ -29,7 +29,7 @@ export async function handler(event: CdkCustomResourceEvent) {
 			const role = (
 				event.ResourceProperties.roleId
 					? await auth0.roles.update(
-							{ id: event.ResourceProperties.roleId },
+							event.ResourceProperties.roleId,
 							{
 								name: event.ResourceProperties.name,
 								description: event.ResourceProperties.description,
@@ -39,7 +39,7 @@ export async function handler(event: CdkCustomResourceEvent) {
 							name: event.ResourceProperties.name,
 							description: event.ResourceProperties.description,
 					  })
-			).data;
+			);
 
 			return {
 				PhysicalResourceId: role.id,
@@ -51,13 +51,13 @@ export async function handler(event: CdkCustomResourceEvent) {
 		case "Update": {
 			const role = (
 				await auth0.roles.update(
-					{ id: event.PhysicalResourceId },
+					event.PhysicalResourceId,
 					{
 						name: event.ResourceProperties.name,
 						description: event.ResourceProperties.description,
 					},
 				)
-			).data;
+			);
 
 			return {
 				PhysicalResourceId: role.id,
@@ -68,7 +68,7 @@ export async function handler(event: CdkCustomResourceEvent) {
 			};
 		}
 		case "Delete": {
-			await auth0.roles.delete({ id: event.PhysicalResourceId });
+			await auth0.roles.delete(event.PhysicalResourceId);
 
 			return {
 				PhysicalResourceId: event.PhysicalResourceId,

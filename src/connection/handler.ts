@@ -30,7 +30,7 @@ export async function handler(event: CdkCustomResourceEvent) {
 			const connection = (
 				event.ResourceProperties.connectionId
 					? await auth0.connections.update(
-							{ id: event.ResourceProperties.connectionId },
+							event.ResourceProperties.connectionId,
 							{
 								display_name: event.ResourceProperties.displayName,
 								enabled_clients: event.ResourceProperties.enabledClients,
@@ -54,7 +54,7 @@ export async function handler(event: CdkCustomResourceEvent) {
 									event.ResourceProperties.disableSignup === "true",
 							},
 					  })
-			).data;
+			);
 
 			return {
 				PhysicalResourceId: connection.id,
@@ -78,7 +78,7 @@ export async function handler(event: CdkCustomResourceEvent) {
 
 			const connection = (
 				await auth0.connections.update(
-					{ id: event.PhysicalResourceId },
+					event.PhysicalResourceId,
 					{
 						display_name: event.ResourceProperties.displayName,
 						enabled_clients: event.ResourceProperties.enabledClients,
@@ -89,7 +89,7 @@ export async function handler(event: CdkCustomResourceEvent) {
 						},
 					},
 				)
-			).data;
+			);
 
 			return {
 				PhysicalResourceId: event.PhysicalResourceId,
@@ -101,9 +101,7 @@ export async function handler(event: CdkCustomResourceEvent) {
 		}
 		case "Delete": {
 			if (event.ResourceProperties.deletionProtection !== "true") {
-				await auth0.connections.delete({
-					id: event.PhysicalResourceId,
-				});
+				await auth0.connections.delete(event.PhysicalResourceId);
 			}
 
 			return {

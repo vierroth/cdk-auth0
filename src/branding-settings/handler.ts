@@ -27,7 +27,7 @@ export async function handler(event: CdkCustomResourceEvent) {
 
 	switch (event.RequestType) {
 		case "Create": {
-			await auth0.branding.updateSettings({
+			await auth0.branding.update({
 				logo_url: event.ResourceProperties.logoUrl,
 				favicon_url: event.ResourceProperties.faviconUrl,
 				colors: event.ResourceProperties.colors,
@@ -41,7 +41,7 @@ export async function handler(event: CdkCustomResourceEvent) {
 			};
 		}
 		case "Update": {
-			await auth0.branding.updateSettings({
+			await auth0.branding.update({
 				logo_url: event.ResourceProperties.logoUrl,
 				favicon_url: event.ResourceProperties.faviconUrl,
 				colors: event.ResourceProperties.colors,

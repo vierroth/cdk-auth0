@@ -89,15 +89,15 @@ export async function handler(event: CdkCustomResourceEvent) {
 
 	switch (event.RequestType) {
 		case "Create": {
-			if (((await auth0.emails.get()).data.name?.trim()?.length || 0) > 0) {
-				await auth0.emails.update({
+			if (((await auth0.emails.provider.get()).name?.trim()?.length || 0) > 0) {
+				await auth0.emails.provider.update({
 					name: event.ResourceProperties.name,
 					enabled: true,
 					default_from_address: event.ResourceProperties.defaultFromAddress,
 					credentials: credentials,
 				});
 			} else {
-				await auth0.emails.configure({
+				await auth0.emails.provider.create({
 					name: event.ResourceProperties.name,
 					enabled: true,
 					default_from_address: event.ResourceProperties.defaultFromAddress,
@@ -108,7 +108,7 @@ export async function handler(event: CdkCustomResourceEvent) {
 			return;
 		}
 		case "Update": {
-			await auth0.emails.update({
+			await auth0.emails.provider.update({
 				name: event.ResourceProperties.name,
 				enabled: true,
 				default_from_address: event.ResourceProperties.defaultFromAddress,
@@ -118,7 +118,7 @@ export async function handler(event: CdkCustomResourceEvent) {
 			return;
 		}
 		case "Delete": {
-			await auth0.emails.update({
+			await auth0.emails.provider.update({
 				enabled: false,
 			});
 

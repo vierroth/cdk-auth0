@@ -34,10 +34,8 @@ export async function handler(event: CdkCustomResourceEvent) {
 						};
 				  })
 				: [];
-			await auth0.roles.addPermissions(
-				{
-					id: event.ResourceProperties.roleId,
-				},
+			await auth0.roles.permissions.add(
+				event.ResourceProperties.roleId,
 				{
 					permissions: permissions,
 				},
@@ -66,14 +64,12 @@ export async function handler(event: CdkCustomResourceEvent) {
 						};
 				  })
 				: [];
-			await auth0.roles.deletePermissions(
-				{ id: event.ResourceProperties.roleId },
+			await auth0.roles.permissions.delete(
+				event.ResourceProperties.roleId,
 				{ permissions: deleteRequest },
 			);
-			await auth0.roles.addPermissions(
-				{
-					id: event.ResourceProperties.roleId,
-				},
+			await auth0.roles.permissions.add(
+				event.ResourceProperties.roleId,
 				{
 					permissions: permissions,
 				},
@@ -87,19 +83,27 @@ export async function handler(event: CdkCustomResourceEvent) {
 			};
 		}
 		case "Delete": {
-			const currentPermissions = (
-				await auth0.roles.getPermissions({
-					id: event.ResourceProperties.roleId,
-				})
-			).data;
-			const deletePermissions = currentPermissions.map((permission) => {
-				return {
-					resource_server_identifier: permission.resource_server_identifier,
-					permission_name: permission.permission_name,
-				};
-			});
-			await auth0.roles.deletePermissions(
-				{ id: event.ResourceProperties.roleId },
+			const currentPermissionsPage = await auth0.roles.permissions.list(
+				event.ResourceProperties.roleId,
+			);
+			const currentPermissions = currentPermissionsPage.data;
+			const deletePermissions = currentPermissions
+				.filter(
+					(permission): permission is typeof permission & {
+						resource_server_identifier: string;
+						permission_name: string;
+					} =>
+						!!permission.resource_server_identifier &&
+						!!permission.permission_name,
+				)
+				.map((permission) => {
+					return {
+						resource_server_identifier: permission.resource_server_identifier,
+						permission_name: permission.permission_name,
+					};
+				});
+			await auth0.roles.permissions.delete(
+				event.ResourceProperties.roleId,
 				{ permissions: deletePermissions },
 			);
 
