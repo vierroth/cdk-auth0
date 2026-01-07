@@ -35,68 +35,65 @@ export async function handler(event: CdkCustomResourceEvent) {
 
 	switch (event.RequestType) {
 		case "Create": {
-			const client = (
-				await auth0.clients.create({
-					name: event.ResourceProperties.name,
-					description: event.ResourceProperties.description,
-					logo_uri: event.ResourceProperties.logoUri,
-					callbacks: event.ResourceProperties.callbacks,
-					allowed_origins: event.ResourceProperties.allowedOrigins,
-					web_origins: event.ResourceProperties.webOrigins,
-					client_aliases: event.ResourceProperties.clientAliases,
-					client_metadata: event.ResourceProperties.clientMetadata,
-					allowed_clients: event.ResourceProperties.allowedClients,
-					allowed_logout_urls: event.ResourceProperties.allowedLogoutUrls,
-					grant_types: event.ResourceProperties.grantTypes,
-					token_endpoint_auth_method:
-						event.ResourceProperties.tokenEndpointAuthMethod,
-					app_type: event.ResourceProperties.appType,
-					is_first_party: event.ResourceProperties.isFirstParty === "true",
-					oidc_conformant: event.ResourceProperties.oidcConformant === "true",
-					jwt_configuration: {
-						lifetime_in_seconds: parseInt(
-							event.ResourceProperties.jwt.tokenLifetime,
-						),
-						alg: event.ResourceProperties.jwt.alg,
-					},
-					sso: event.ResourceProperties.sso === "true",
-					cross_origin_authentication:
-						event.ResourceProperties.crossOriginAuthentication === "true",
-					cross_origin_loc: event.ResourceProperties.crossOriginLoc,
-					sso_disabled: event.ResourceProperties.ssoDisabled === "true",
-					custom_login_page_on:
-						event.ResourceProperties.customLoginPageOn === "true",
-					custom_login_page: event.ResourceProperties.customLoginPage,
-					custom_login_page_preview:
-						event.ResourceProperties.customLoginPagePreview,
-					form_template: event.ResourceProperties.formTemplate,
-					initiate_login_uri: event.ResourceProperties.initiateLoginUri,
-					refresh_token: event.ResourceProperties.refreshToken
-						? {
-								rotation_type:
-									event.ResourceProperties.refreshToken.rotationType,
-								expiration_type:
-									event.ResourceProperties.refreshToken.expirationType,
-								leeway: parseInt(event.ResourceProperties.refreshToken.leeway),
-								token_lifetime: parseInt(
-									event.ResourceProperties.refreshToken.tokenLifetime,
-								),
-								infinite_token_lifetime:
-									event.ResourceProperties.refreshToken
-										.infiniteTokenLifetime === "true",
-								idle_token_lifetime: parseInt(
-									event.ResourceProperties.refreshToken.idleTokenLifetime,
-								),
-								infinite_idle_token_lifetime:
-									event.ResourceProperties.refreshToken
-										.infiniteIdleTokenLifetime === "true",
-						  }
-						: undefined,
-					organization_usage: event.ResourceProperties.organizationUsage,
-					organization_require_behavior:
-						event.ResourceProperties.organizationRequireBehavior,
-				})
-			);
+			const client = await auth0.clients.create({
+				name: event.ResourceProperties.name,
+				description: event.ResourceProperties.description,
+				logo_uri: event.ResourceProperties.logoUri,
+				callbacks: event.ResourceProperties.callbacks,
+				allowed_origins: event.ResourceProperties.allowedOrigins,
+				web_origins: event.ResourceProperties.webOrigins,
+				client_aliases: event.ResourceProperties.clientAliases,
+				client_metadata: event.ResourceProperties.clientMetadata,
+				allowed_clients: event.ResourceProperties.allowedClients,
+				allowed_logout_urls: event.ResourceProperties.allowedLogoutUrls,
+				grant_types: event.ResourceProperties.grantTypes,
+				token_endpoint_auth_method:
+					event.ResourceProperties.tokenEndpointAuthMethod,
+				app_type: event.ResourceProperties.appType,
+				is_first_party: event.ResourceProperties.isFirstParty === "true",
+				oidc_conformant: event.ResourceProperties.oidcConformant === "true",
+				jwt_configuration: {
+					lifetime_in_seconds: parseInt(
+						event.ResourceProperties.jwt.tokenLifetime,
+					),
+					alg: event.ResourceProperties.jwt.alg,
+				},
+				sso: event.ResourceProperties.sso === "true",
+				cross_origin_authentication:
+					event.ResourceProperties.crossOriginAuthentication === "true",
+				cross_origin_loc: event.ResourceProperties.crossOriginLoc,
+				sso_disabled: event.ResourceProperties.ssoDisabled === "true",
+				custom_login_page_on:
+					event.ResourceProperties.customLoginPageOn === "true",
+				custom_login_page: event.ResourceProperties.customLoginPage,
+				custom_login_page_preview:
+					event.ResourceProperties.customLoginPagePreview,
+				form_template: event.ResourceProperties.formTemplate,
+				initiate_login_uri: event.ResourceProperties.initiateLoginUri,
+				refresh_token: event.ResourceProperties.refreshToken
+					? {
+							rotation_type: event.ResourceProperties.refreshToken.rotationType,
+							expiration_type:
+								event.ResourceProperties.refreshToken.expirationType,
+							leeway: parseInt(event.ResourceProperties.refreshToken.leeway),
+							token_lifetime: parseInt(
+								event.ResourceProperties.refreshToken.tokenLifetime,
+							),
+							infinite_token_lifetime:
+								event.ResourceProperties.refreshToken.infiniteTokenLifetime ===
+								"true",
+							idle_token_lifetime: parseInt(
+								event.ResourceProperties.refreshToken.idleTokenLifetime,
+							),
+							infinite_idle_token_lifetime:
+								event.ResourceProperties.refreshToken
+									.infiniteIdleTokenLifetime === "true",
+					  }
+					: undefined,
+				organization_usage: event.ResourceProperties.organizationUsage,
+				organization_require_behavior:
+					event.ResourceProperties.organizationRequireBehavior,
+			});
 
 			return {
 				PhysicalResourceId: client.client_id,
@@ -115,73 +112,67 @@ export async function handler(event: CdkCustomResourceEvent) {
 			};
 		}
 		case "Update": {
-			await auth0.clients.update(
-				event.PhysicalResourceId,
-				{
-					name: event.ResourceProperties.name || event.LogicalResourceId,
-					description: event.ResourceProperties.description,
-					logo_uri: event.ResourceProperties.logoUri,
-					callbacks: event.ResourceProperties.callbacks,
-					allowed_origins: event.ResourceProperties.allowedOrigins,
-					web_origins: event.ResourceProperties.webOrigins,
-					client_aliases: event.ResourceProperties.clientAliases,
-					client_metadata: event.ResourceProperties.clientMetadata,
-					allowed_clients: event.ResourceProperties.allowedClients,
-					allowed_logout_urls: event.ResourceProperties.allowedLogoutUrls,
-					grant_types: event.ResourceProperties.grantTypes,
-					token_endpoint_auth_method:
-						event.ResourceProperties.tokenEndpointAuthMethod,
-					app_type: event.ResourceProperties.appType,
-					is_first_party: event.ResourceProperties.isFirstParty === "true",
-					oidc_conformant: event.ResourceProperties.oidcConformant === "true",
-					jwt_configuration: {
-						lifetime_in_seconds: parseInt(
-							event.ResourceProperties.jwt.tokenLifetime,
-						),
-						alg: event.ResourceProperties.jwt.alg,
-					},
-					sso: event.ResourceProperties.sso === "true",
-					cross_origin_authentication:
-						event.ResourceProperties.crossOriginAuthentication === "true",
-					cross_origin_loc: event.ResourceProperties.crossOriginLoc,
-					sso_disabled: event.ResourceProperties.ssoDisabled === "true",
-					custom_login_page_on:
-						event.ResourceProperties.customLoginPageOn === "true",
-					custom_login_page: event.ResourceProperties.customLoginPage,
-					custom_login_page_preview:
-						event.ResourceProperties.customLoginPagePreview,
-					form_template: event.ResourceProperties.formTemplate,
-					initiate_login_uri: event.ResourceProperties.initiateLoginUri,
-					refresh_token: event.ResourceProperties.refreshToken
-						? {
-								rotation_type:
-									event.ResourceProperties.refreshToken.rotationType,
-								expiration_type:
-									event.ResourceProperties.refreshToken.expirationType,
-								leeway: parseInt(event.ResourceProperties.refreshToken.leeway),
-								token_lifetime: parseInt(
-									event.ResourceProperties.refreshToken.tokenLifetime,
-								),
-								infinite_token_lifetime:
-									event.ResourceProperties.refreshToken
-										.infiniteTokenLifetime === "true",
-								idle_token_lifetime: parseInt(
-									event.ResourceProperties.refreshToken.idleTokenLifetime,
-								),
-								infinite_idle_token_lifetime:
-									event.ResourceProperties.refreshToken
-										.infiniteIdleTokenLifetime === "true",
-						  }
-						: undefined,
-					organization_usage: event.ResourceProperties.organizationUsage,
-					organization_require_behavior:
-						event.ResourceProperties.organizationRequireBehavior,
+			await auth0.clients.update(event.PhysicalResourceId, {
+				name: event.ResourceProperties.name || event.LogicalResourceId,
+				description: event.ResourceProperties.description,
+				logo_uri: event.ResourceProperties.logoUri,
+				callbacks: event.ResourceProperties.callbacks,
+				allowed_origins: event.ResourceProperties.allowedOrigins,
+				web_origins: event.ResourceProperties.webOrigins,
+				client_aliases: event.ResourceProperties.clientAliases,
+				client_metadata: event.ResourceProperties.clientMetadata,
+				allowed_clients: event.ResourceProperties.allowedClients,
+				allowed_logout_urls: event.ResourceProperties.allowedLogoutUrls,
+				grant_types: event.ResourceProperties.grantTypes,
+				token_endpoint_auth_method:
+					event.ResourceProperties.tokenEndpointAuthMethod,
+				app_type: event.ResourceProperties.appType,
+				is_first_party: event.ResourceProperties.isFirstParty === "true",
+				oidc_conformant: event.ResourceProperties.oidcConformant === "true",
+				jwt_configuration: {
+					lifetime_in_seconds: parseInt(
+						event.ResourceProperties.jwt.tokenLifetime,
+					),
+					alg: event.ResourceProperties.jwt.alg,
 				},
-			);
+				sso: event.ResourceProperties.sso === "true",
+				cross_origin_authentication:
+					event.ResourceProperties.crossOriginAuthentication === "true",
+				cross_origin_loc: event.ResourceProperties.crossOriginLoc,
+				sso_disabled: event.ResourceProperties.ssoDisabled === "true",
+				custom_login_page_on:
+					event.ResourceProperties.customLoginPageOn === "true",
+				custom_login_page: event.ResourceProperties.customLoginPage,
+				custom_login_page_preview:
+					event.ResourceProperties.customLoginPagePreview,
+				form_template: event.ResourceProperties.formTemplate,
+				initiate_login_uri: event.ResourceProperties.initiateLoginUri,
+				refresh_token: event.ResourceProperties.refreshToken
+					? {
+							rotation_type: event.ResourceProperties.refreshToken.rotationType,
+							expiration_type:
+								event.ResourceProperties.refreshToken.expirationType,
+							leeway: parseInt(event.ResourceProperties.refreshToken.leeway),
+							token_lifetime: parseInt(
+								event.ResourceProperties.refreshToken.tokenLifetime,
+							),
+							infinite_token_lifetime:
+								event.ResourceProperties.refreshToken.infiniteTokenLifetime ===
+								"true",
+							idle_token_lifetime: parseInt(
+								event.ResourceProperties.refreshToken.idleTokenLifetime,
+							),
+							infinite_idle_token_lifetime:
+								event.ResourceProperties.refreshToken
+									.infiniteIdleTokenLifetime === "true",
+					  }
+					: undefined,
+				organization_usage: event.ResourceProperties.organizationUsage,
+				organization_require_behavior:
+					event.ResourceProperties.organizationRequireBehavior,
+			});
 
-			const client = (
-				await auth0.clients.get(event.PhysicalResourceId)
-			);
+			const client = await auth0.clients.get(event.PhysicalResourceId);
 
 			return {
 				PhysicalResourceId: event.PhysicalResourceId,

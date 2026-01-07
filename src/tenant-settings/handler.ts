@@ -136,6 +136,9 @@ export async function handler(event: CdkCustomResourceEvent) {
 						event.ResourceProperties.flags.enableApisSection === "true",
 					enable_pipeline2:
 						event.ResourceProperties.flags.enablePipeline2 === "true",
+					enable_dynamic_client_registration:
+						event.ResourceProperties.flags.enableDynamicClientRegistration ===
+						"true",
 					enable_legacy_profile:
 						event.ResourceProperties.flags.enableLegacyProfile === "true",
 					disable_clickjack_protection_headers:

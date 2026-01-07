@@ -27,25 +27,11 @@ export async function handler(event: CdkCustomResourceEvent) {
 
 	switch (event.RequestType) {
 		case "Create": {
-			const connection = (
-				event.ResourceProperties.connectionId
-					? await auth0.connections.update(
-							event.ResourceProperties.connectionId,
-							{
-								display_name: event.ResourceProperties.displayName,
-								enabled_clients: event.ResourceProperties.enabledClients,
-								is_domain_connection:
-									event.ResourceProperties.isDomainConnection === "true",
-								options: {
-									disable_signup:
-										event.ResourceProperties.disableSignup === "true",
-								},
-							},
-					  )
-					: await auth0.connections.create({
-							name: event.ResourceProperties.name,
+			const connection = event.ResourceProperties.connectionId
+				? await auth0.connections.update(
+						event.ResourceProperties.connectionId,
+						{
 							display_name: event.ResourceProperties.displayName,
-							strategy: event.ResourceProperties.strategy,
 							enabled_clients: event.ResourceProperties.enabledClients,
 							is_domain_connection:
 								event.ResourceProperties.isDomainConnection === "true",
@@ -53,8 +39,19 @@ export async function handler(event: CdkCustomResourceEvent) {
 								disable_signup:
 									event.ResourceProperties.disableSignup === "true",
 							},
-					  })
-			);
+						},
+				  )
+				: await auth0.connections.create({
+						name: event.ResourceProperties.name,
+						display_name: event.ResourceProperties.displayName,
+						strategy: event.ResourceProperties.strategy,
+						enabled_clients: event.ResourceProperties.enabledClients,
+						is_domain_connection:
+							event.ResourceProperties.isDomainConnection === "true",
+						options: {
+							disable_signup: event.ResourceProperties.disableSignup === "true",
+						},
+				  });
 
 			return {
 				PhysicalResourceId: connection.id,
@@ -76,19 +73,17 @@ export async function handler(event: CdkCustomResourceEvent) {
 				throw Error("Can't change connection strategy");
 			}
 
-			const connection = (
-				await auth0.connections.update(
-					event.PhysicalResourceId,
-					{
-						display_name: event.ResourceProperties.displayName,
-						enabled_clients: event.ResourceProperties.enabledClients,
-						is_domain_connection:
-							event.ResourceProperties.isDomainConnection === "true",
-						options: {
-							disable_signup: event.ResourceProperties.disableSignup === "true",
-						},
+			const connection = await auth0.connections.update(
+				event.PhysicalResourceId,
+				{
+					display_name: event.ResourceProperties.displayName,
+					enabled_clients: event.ResourceProperties.enabledClients,
+					is_domain_connection:
+						event.ResourceProperties.isDomainConnection === "true",
+					options: {
+						disable_signup: event.ResourceProperties.disableSignup === "true",
 					},
-				)
+				},
 			);
 
 			return {

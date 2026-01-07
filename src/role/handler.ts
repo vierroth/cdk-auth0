@@ -26,20 +26,15 @@ export async function handler(event: CdkCustomResourceEvent) {
 
 	switch (event.RequestType) {
 		case "Create": {
-			const role = (
-				event.ResourceProperties.roleId
-					? await auth0.roles.update(
-							event.ResourceProperties.roleId,
-							{
-								name: event.ResourceProperties.name,
-								description: event.ResourceProperties.description,
-							},
-					  )
-					: await auth0.roles.create({
-							name: event.ResourceProperties.name,
-							description: event.ResourceProperties.description,
-					  })
-			);
+			const role = event.ResourceProperties.roleId
+				? await auth0.roles.update(event.ResourceProperties.roleId, {
+						name: event.ResourceProperties.name,
+						description: event.ResourceProperties.description,
+				  })
+				: await auth0.roles.create({
+						name: event.ResourceProperties.name,
+						description: event.ResourceProperties.description,
+				  });
 
 			return {
 				PhysicalResourceId: role.id,
@@ -49,15 +44,10 @@ export async function handler(event: CdkCustomResourceEvent) {
 			};
 		}
 		case "Update": {
-			const role = (
-				await auth0.roles.update(
-					event.PhysicalResourceId,
-					{
-						name: event.ResourceProperties.name,
-						description: event.ResourceProperties.description,
-					},
-				)
-			);
+			const role = await auth0.roles.update(event.PhysicalResourceId, {
+				name: event.ResourceProperties.name,
+				description: event.ResourceProperties.description,
+			});
 
 			return {
 				PhysicalResourceId: role.id,

@@ -27,7 +27,7 @@ export interface ENV extends ENV_DEFAULT {
 export class LambdaBase extends NodejsFunction {
 	constructor(scope: Construct, id: string, props: NodejsFunctionProps) {
 		super(scope, id, {
-			runtime: Runtime.NODEJS_22_X,
+			runtime: Runtime.NODEJS_24_X,
 			architecture: Architecture.ARM_64,
 			timeout: Duration.minutes(2),
 			logGroup: new LogGroup(scope, `${id}LogGroup`, {

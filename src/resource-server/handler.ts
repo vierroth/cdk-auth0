@@ -27,10 +27,35 @@ export async function handler(event: CdkCustomResourceEvent) {
 
 	switch (event.RequestType) {
 		case "Create": {
-			const resourceServers = (
-				await auth0.resourceServers.create({
-					name: event.ResourceProperties.name,
-					identifier: event.ResourceProperties.identifier,
+			const resourceServers = await auth0.resourceServers.create({
+				name: event.ResourceProperties.name,
+				identifier: event.ResourceProperties.identifier,
+				scopes: event.ResourceProperties.scopes,
+				signing_alg: event.ResourceProperties.signingAlg,
+				signing_secret: event.ResourceProperties.signingSecret,
+				allow_offline_access:
+					event.ResourceProperties.allowOfflineAccess === "true",
+				token_lifetime: parseInt(event.ResourceProperties.tokenLifetime),
+				token_dialect: event.ResourceProperties.tokenDialect,
+				skip_consent_for_verifiable_first_party_clients:
+					event.ResourceProperties.skipConsentForVerifiableFirstPartyClients ===
+					"true",
+				enforce_policies: event.ResourceProperties.enforcePolicies === "true",
+			});
+
+			return {
+				PhysicalResourceId: resourceServers.id,
+				Data: {
+					resourceServerId: resourceServers.id,
+					resourceServerIdentifier: resourceServers.identifier,
+				},
+			};
+		}
+		case "Update": {
+			const resourceServers = await auth0.resourceServers.update(
+				event.PhysicalResourceId,
+				{
+					name: event.ResourceProperties.name || event.LogicalResourceId,
 					scopes: event.ResourceProperties.scopes,
 					signing_alg: event.ResourceProperties.signingAlg,
 					signing_secret: event.ResourceProperties.signingSecret,
@@ -42,37 +67,7 @@ export async function handler(event: CdkCustomResourceEvent) {
 						event.ResourceProperties
 							.skipConsentForVerifiableFirstPartyClients === "true",
 					enforce_policies: event.ResourceProperties.enforcePolicies === "true",
-				})
-			);
-
-			return {
-				PhysicalResourceId: resourceServers.id,
-				Data: {
-					resourceServerId: resourceServers.id,
-					resourceServerIdentifier: resourceServers.identifier,
 				},
-			};
-		}
-		case "Update": {
-			const resourceServers = (
-				await auth0.resourceServers.update(
-					event.PhysicalResourceId,
-					{
-						name: event.ResourceProperties.name || event.LogicalResourceId,
-						scopes: event.ResourceProperties.scopes,
-						signing_alg: event.ResourceProperties.signingAlg,
-						signing_secret: event.ResourceProperties.signingSecret,
-						allow_offline_access:
-							event.ResourceProperties.allowOfflineAccess === "true",
-						token_lifetime: parseInt(event.ResourceProperties.tokenLifetime),
-						token_dialect: event.ResourceProperties.tokenDialect,
-						skip_consent_for_verifiable_first_party_clients:
-							event.ResourceProperties
-								.skipConsentForVerifiableFirstPartyClients === "true",
-						enforce_policies:
-							event.ResourceProperties.enforcePolicies === "true",
-					},
-				)
 			);
 
 			return {

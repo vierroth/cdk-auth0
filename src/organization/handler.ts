@@ -26,37 +26,35 @@ export async function handler(event: CdkCustomResourceEvent) {
 
 	switch (event.RequestType) {
 		case "Create": {
-			const organization = (
-				await auth0.organizations.create({
-					name: event.ResourceProperties.name,
-					display_name: event.ResourceProperties.displayName,
-					branding: event.ResourceProperties.branding
-						? {
-								logo_url: event.ResourceProperties.branding.logoUrl,
-								colors: {
-									primary: event.ResourceProperties.branding.colors.primary,
-									page_background:
-										event.ResourceProperties.branding.colors.pageBackground,
-								},
-						  }
-						: undefined,
-					metadata: event.ResourceProperties.metadata,
-					enabled_connections: event.ResourceProperties.enabledConnections
-						? [
-								{
-									connection_id:
-										event.ResourceProperties.enabledConnections.connectionId,
-									assign_membership_on_login:
-										event.ResourceProperties.enabledConnections
-											.assignMembershipOnLogin === "true",
-									show_as_button:
-										event.ResourceProperties.enabledConnections.showAsButton ===
-										"true",
-								},
-						  ]
-						: [],
-				})
-			);
+			const organization = await auth0.organizations.create({
+				name: event.ResourceProperties.name,
+				display_name: event.ResourceProperties.displayName,
+				branding: event.ResourceProperties.branding
+					? {
+							logo_url: event.ResourceProperties.branding.logoUrl,
+							colors: {
+								primary: event.ResourceProperties.branding.colors.primary,
+								page_background:
+									event.ResourceProperties.branding.colors.pageBackground,
+							},
+					  }
+					: undefined,
+				metadata: event.ResourceProperties.metadata,
+				enabled_connections: event.ResourceProperties.enabledConnections
+					? [
+							{
+								connection_id:
+									event.ResourceProperties.enabledConnections.connectionId,
+								assign_membership_on_login:
+									event.ResourceProperties.enabledConnections
+										.assignMembershipOnLogin === "true",
+								show_as_button:
+									event.ResourceProperties.enabledConnections.showAsButton ===
+									"true",
+							},
+					  ]
+					: [],
+			});
 
 			return {
 				PhysicalResourceId: organization.id,
@@ -73,25 +71,23 @@ export async function handler(event: CdkCustomResourceEvent) {
 				throw Error("Can't change enabled connections");
 			}
 
-			const organization = (
-				await auth0.organizations.update(
-					event.PhysicalResourceId,
-					{
-						name: event.ResourceProperties.name,
-						display_name: event.ResourceProperties.displayName,
-						branding: event.ResourceProperties.branding
-							? {
-									logo_url: event.ResourceProperties.branding.logoUrl,
-									colors: {
-										primary: event.ResourceProperties.branding.colors.primary,
-										page_background:
-											event.ResourceProperties.branding.colors.pageBackground,
-									},
-							  }
-							: undefined,
-						metadata: event.ResourceProperties.metadata || [],
-					},
-				)
+			const organization = await auth0.organizations.update(
+				event.PhysicalResourceId,
+				{
+					name: event.ResourceProperties.name,
+					display_name: event.ResourceProperties.displayName,
+					branding: event.ResourceProperties.branding
+						? {
+								logo_url: event.ResourceProperties.branding.logoUrl,
+								colors: {
+									primary: event.ResourceProperties.branding.colors.primary,
+									page_background:
+										event.ResourceProperties.branding.colors.pageBackground,
+								},
+						  }
+						: undefined,
+					metadata: event.ResourceProperties.metadata || [],
+				},
 			);
 
 			return {

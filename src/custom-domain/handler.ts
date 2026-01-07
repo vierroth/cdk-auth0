@@ -27,16 +27,13 @@ export async function handler(event: CdkCustomResourceEvent) {
 
 	switch (event.RequestType) {
 		case "Create": {
-			const customDomain = (
-				await auth0.customDomains.create({
-					domain: event.ResourceProperties.domain,
-					type: event.ResourceProperties.domainType,
-					verification_method: event.ResourceProperties.verificationMethod,
-					tls_policy: event.ResourceProperties.tlsPolicy,
-					custom_client_ip_header:
-						event.ResourceProperties.customClientIpHeader,
-				})
-			);
+			const customDomain = await auth0.customDomains.create({
+				domain: event.ResourceProperties.domain,
+				type: event.ResourceProperties.domainType,
+				verification_method: event.ResourceProperties.verificationMethod,
+				tls_policy: event.ResourceProperties.tlsPolicy,
+				custom_client_ip_header: event.ResourceProperties.customClientIpHeader,
+			});
 
 			return {
 				PhysicalResourceId: customDomain.custom_domain_id,
@@ -48,15 +45,13 @@ export async function handler(event: CdkCustomResourceEvent) {
 			};
 		}
 		case "Update": {
-			const customDomain = (
-				await auth0.customDomains.update(
-					event.PhysicalResourceId,
-					{
-						tls_policy: event.ResourceProperties.tlsPolicy,
-						custom_client_ip_header:
-							event.ResourceProperties.customClientIpHeader,
-					},
-				)
+			const customDomain = await auth0.customDomains.update(
+				event.PhysicalResourceId,
+				{
+					tls_policy: event.ResourceProperties.tlsPolicy,
+					custom_client_ip_header:
+						event.ResourceProperties.customClientIpHeader,
+				},
 			);
 
 			return {

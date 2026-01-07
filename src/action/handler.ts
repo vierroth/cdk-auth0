@@ -10,10 +10,6 @@ declare global {
 	}
 }
 
-async function timeout(ms) {
-	return new Promise((resolve) => setTimeout(resolve, ms));
-}
-
 export async function handler(event: CdkCustomResourceEvent) {
 	const auth0Api = JSON.parse(
 		await getSecretValue(
@@ -42,8 +38,12 @@ export async function handler(event: CdkCustomResourceEvent) {
 				})
 			).id;
 
+			if (!id) {
+				throw new Error("Create action did not return ID");
+			}
+
 			while ((await auth0.actions.get(id)).status !== "built") {
-				await timeout(5000);
+				await new Promise((resolve) => setTimeout(resolve, 5000));
 			}
 
 			await auth0.actions.deploy(id);
@@ -56,23 +56,19 @@ export async function handler(event: CdkCustomResourceEvent) {
 			};
 		}
 		case "Update": {
-			await auth0.actions.update(
-				event.PhysicalResourceId,
-				{
-					name: event.ResourceProperties.name,
-					code: event.ResourceProperties.code,
-					dependencies: event.ResourceProperties.dependencies,
-					supported_triggers: event.ResourceProperties.supportedTriggers,
-					runtime: event.ResourceProperties.runtime,
-					secrets: event.ResourceProperties.secrets,
-				},
-			);
+			await auth0.actions.update(event.PhysicalResourceId, {
+				name: event.ResourceProperties.name,
+				code: event.ResourceProperties.code,
+				dependencies: event.ResourceProperties.dependencies,
+				supported_triggers: event.ResourceProperties.supportedTriggers,
+				runtime: event.ResourceProperties.runtime,
+				secrets: event.ResourceProperties.secrets,
+			});
 
 			while (
-				(await auth0.actions.get(event.PhysicalResourceId))
-					.status !== "built"
+				(await auth0.actions.get(event.PhysicalResourceId)).status !== "built"
 			) {
-				await timeout(5000);
+				await new Promise((resolve) => setTimeout(resolve, 5000));
 			}
 
 			await auth0.actions.deploy(event.PhysicalResourceId);

@@ -194,6 +194,6 @@ out/
 
 /artifacts/
 
-tsconfig.json
+/tsconfig.json
 
 .jsii

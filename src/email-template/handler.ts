@@ -66,23 +66,20 @@ export async function handler(event: CdkCustomResourceEvent) {
 			};
 		}
 		case "Update": {
-			await auth0.emailTemplates.update(
-				event.ResourceProperties.template,
-				{
-					template: event.ResourceProperties.template,
-					body: event.ResourceProperties.body,
-					from: event.ResourceProperties.from,
-					resultUrl: event.ResourceProperties.resultUrl,
-					subject: event.ResourceProperties.subject,
-					syntax: event.ResourceProperties.syntax,
-					urlLifetimeInSeconds: Number(
-						event.ResourceProperties.urlLifetimeInSeconds,
-					),
-					includeEmailInRedirect:
-						event.ResourceProperties.includeEmailInRedirect === "true",
-					enabled: event.ResourceProperties.enabled === "true",
-				},
-			);
+			await auth0.emailTemplates.update(event.ResourceProperties.template, {
+				template: event.ResourceProperties.template,
+				body: event.ResourceProperties.body,
+				from: event.ResourceProperties.from,
+				resultUrl: event.ResourceProperties.resultUrl,
+				subject: event.ResourceProperties.subject,
+				syntax: event.ResourceProperties.syntax,
+				urlLifetimeInSeconds: Number(
+					event.ResourceProperties.urlLifetimeInSeconds,
+				),
+				includeEmailInRedirect:
+					event.ResourceProperties.includeEmailInRedirect === "true",
+				enabled: event.ResourceProperties.enabled === "true",
+			});
 
 			return {
 				PhysicalResource: event.ResourceProperties.template,

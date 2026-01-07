@@ -81,11 +81,6 @@ export interface FlagsProps {
 	 */
 	readonly enableDynamicClientRegistration?: boolean;
 	/**
-	 * Whether emails sent by Auth0 for change password, verification etc. should use your verified custom domain (true) or your auth0.com sub-domain (false). Affects all emails, links, and URLs. Email will fail if the custom domain is not verified.
-	 * @default false
-	 */
-	readonly enableCustomDomainInEmails?: boolean;
-	/**
 	 * Whether the public sign up process shows a user_exists error (true) or a generic error (false) if the user already exists.
 	 * @default false
 	 */
@@ -264,8 +259,6 @@ export class TenantSettings extends CustomResource {
 					enablePipeline2: props.flags?.enablePipeline2 || true,
 					enableDynamicClientRegistration:
 						props.flags?.enableDynamicClientRegistration || false,
-					enableCustomDomainInEmails:
-						props.flags?.enableCustomDomainInEmails || false,
 					enableLegacyProfile: props.flags?.enableLegacyProfile || false,
 					disableClickjackProtectionHeaders:
 						props.flags?.disableClickjackProtectionHeaders || false,

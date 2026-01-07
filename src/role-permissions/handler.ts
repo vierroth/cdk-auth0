@@ -27,19 +27,16 @@ export async function handler(event: CdkCustomResourceEvent) {
 	switch (event.RequestType) {
 		case "Create": {
 			const permissions = event.ResourceProperties.permissions
-				? event.ResourceProperties.permissions.map((permission) => {
+				? event.ResourceProperties.permissions.map((permission: any) => {
 						return {
 							resource_server_identifier: permission.resourceServerIdentifier,
 							permission_name: permission.permissionName,
 						};
 				  })
 				: [];
-			await auth0.roles.permissions.add(
-				event.ResourceProperties.roleId,
-				{
-					permissions: permissions,
-				},
-			);
+			await auth0.roles.permissions.add(event.ResourceProperties.roleId, {
+				permissions: permissions,
+			});
 
 			return {
 				PhysicalResourceId: event.ResourceProperties.roleId,
@@ -50,30 +47,26 @@ export async function handler(event: CdkCustomResourceEvent) {
 		}
 		case "Update": {
 			const currentPermissions = event.OldResourceProperties.permissions;
-			const deleteRequest = currentPermissions.map((permission) => {
+			const deleteRequest = currentPermissions.map((permission: any) => {
 				return {
 					resource_server_identifier: permission.resourceServerIdentifier,
 					permission_name: permission.permissionName,
 				};
 			});
 			const permissions = event.ResourceProperties.permissions
-				? event.ResourceProperties.permissions.map((permission) => {
+				? event.ResourceProperties.permissions.map((permission: any) => {
 						return {
 							resource_server_identifier: permission.resourceServerIdentifier,
 							permission_name: permission.permissionName,
 						};
 				  })
 				: [];
-			await auth0.roles.permissions.delete(
-				event.ResourceProperties.roleId,
-				{ permissions: deleteRequest },
-			);
-			await auth0.roles.permissions.add(
-				event.ResourceProperties.roleId,
-				{
-					permissions: permissions,
-				},
-			);
+			await auth0.roles.permissions.delete(event.ResourceProperties.roleId, {
+				permissions: deleteRequest,
+			});
+			await auth0.roles.permissions.add(event.ResourceProperties.roleId, {
+				permissions: permissions,
+			});
 
 			return {
 				PhysicalResourceId: event.ResourceProperties.PhysicalResourceId,
@@ -89,7 +82,9 @@ export async function handler(event: CdkCustomResourceEvent) {
 			const currentPermissions = currentPermissionsPage.data;
 			const deletePermissions = currentPermissions
 				.filter(
-					(permission): permission is typeof permission & {
+					(
+						permission,
+					): permission is typeof permission & {
 						resource_server_identifier: string;
 						permission_name: string;
 					} =>
@@ -102,10 +97,9 @@ export async function handler(event: CdkCustomResourceEvent) {
 						permission_name: permission.permission_name,
 					};
 				});
-			await auth0.roles.permissions.delete(
-				event.ResourceProperties.roleId,
-				{ permissions: deletePermissions },
-			);
+			await auth0.roles.permissions.delete(event.ResourceProperties.roleId, {
+				permissions: deletePermissions,
+			});
 
 			return {
 				PhysicalResourceId: event.PhysicalResourceId,

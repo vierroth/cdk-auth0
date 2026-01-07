@@ -59,12 +59,9 @@ export async function handler(event: CdkCustomResourceEvent) {
 				throw new Error("Can't modify client grant audience");
 			}
 
-			await auth0.clientGrants.update(
-				event.PhysicalResourceId,
-				{
-					scope: event.ResourceProperties.scope,
-				},
-			);
+			await auth0.clientGrants.update(event.PhysicalResourceId, {
+				scope: event.ResourceProperties.scope,
+			});
 
 			return {
 				PhysicalResourceId: event.PhysicalResourceId,
