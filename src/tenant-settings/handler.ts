@@ -27,7 +27,7 @@ export async function handler(event: CdkCustomResourceEvent) {
 
 	switch (event.RequestType) {
 		case "Create": {
-			await auth0.tenants.updateSettings({
+			await auth0.tenants.settings.update({
 				change_password: {
 					enabled: event.ResourceProperties.changePassword.enabled === "true",
 					html: event.ResourceProperties.changePassword.html,
@@ -57,9 +57,6 @@ export async function handler(event: CdkCustomResourceEvent) {
 						event.ResourceProperties.flags.enablePipeline2 === "true",
 					enable_dynamic_client_registration:
 						event.ResourceProperties.flags.enableDynamicClientRegistration ===
-						"true",
-					enable_custom_domain_in_emails:
-						event.ResourceProperties.flags.enableCustomDomainInEmails ===
 						"true",
 					enable_legacy_profile:
 						event.ResourceProperties.flags.enableLegacyProfile === "true",
@@ -111,7 +108,7 @@ export async function handler(event: CdkCustomResourceEvent) {
 			};
 		}
 		case "Update": {
-			await auth0.tenants.updateSettings({
+			await auth0.tenants.settings.update({
 				change_password: {
 					enabled: event.ResourceProperties.changePassword.enabled === "true",
 					html: event.ResourceProperties.changePassword.html,
@@ -139,12 +136,6 @@ export async function handler(event: CdkCustomResourceEvent) {
 						event.ResourceProperties.flags.enableApisSection === "true",
 					enable_pipeline2:
 						event.ResourceProperties.flags.enablePipeline2 === "true",
-					enable_dynamic_client_registration:
-						event.ResourceProperties.flags.enableDynamicClientRegistration ===
-						"true",
-					enable_custom_domain_in_emails:
-						event.ResourceProperties.flags.enableCustomDomainInEmails ===
-						"true",
 					enable_legacy_profile:
 						event.ResourceProperties.flags.enableLegacyProfile === "true",
 					disable_clickjack_protection_headers:

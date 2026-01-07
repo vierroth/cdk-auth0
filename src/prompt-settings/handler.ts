@@ -27,7 +27,7 @@ export async function handler(event: CdkCustomResourceEvent) {
 
 	switch (event.RequestType) {
 		case "Create": {
-			await auth0.prompts.update({
+			await auth0.prompts.updateSettings({
 				universal_login_experience:
 					event.ResourceProperties.universalLoginExperience,
 				identifier_first: event.ResourceProperties.identifierFirst === "true",
@@ -40,7 +40,7 @@ export async function handler(event: CdkCustomResourceEvent) {
 			};
 		}
 		case "Update": {
-			await auth0.prompts.update({
+			await auth0.prompts.updateSettings({
 				universal_login_experience:
 					event.ResourceProperties.universalLoginExperience,
 				identifier_first: event.ResourceProperties.identifierFirst === "true",

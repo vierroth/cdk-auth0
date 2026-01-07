@@ -52,7 +52,7 @@ export async function handler(event: CdkCustomResourceEvent) {
 						`${event.ResourceProperties.template} already created, updating email template.`,
 					);
 					await auth0.emailTemplates.update(
-						{ templateName: event.ResourceProperties.template },
+						event.ResourceProperties.template,
 						body,
 					);
 				} else {
@@ -67,7 +67,7 @@ export async function handler(event: CdkCustomResourceEvent) {
 		}
 		case "Update": {
 			await auth0.emailTemplates.update(
-				{ templateName: event.ResourceProperties.template },
+				event.ResourceProperties.template,
 				{
 					template: event.ResourceProperties.template,
 					body: event.ResourceProperties.body,

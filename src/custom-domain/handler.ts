@@ -36,7 +36,7 @@ export async function handler(event: CdkCustomResourceEvent) {
 					custom_client_ip_header:
 						event.ResourceProperties.customClientIpHeader,
 				})
-			).data;
+			);
 
 			return {
 				PhysicalResourceId: customDomain.custom_domain_id,
@@ -50,14 +50,14 @@ export async function handler(event: CdkCustomResourceEvent) {
 		case "Update": {
 			const customDomain = (
 				await auth0.customDomains.update(
-					{ id: event.PhysicalResourceId },
+					event.PhysicalResourceId,
 					{
 						tls_policy: event.ResourceProperties.tlsPolicy,
 						custom_client_ip_header:
 							event.ResourceProperties.customClientIpHeader,
 					},
 				)
-			).data;
+			);
 
 			return {
 				PhysicalResourceId: event.PhysicalResourceId,
@@ -69,7 +69,7 @@ export async function handler(event: CdkCustomResourceEvent) {
 			};
 		}
 		case "Delete": {
-			await auth0.customDomains.delete({ id: event.PhysicalResourceId });
+			await auth0.customDomains.delete(event.PhysicalResourceId);
 
 			return {
 				PhysicalResourceId: event.PhysicalResourceId,
