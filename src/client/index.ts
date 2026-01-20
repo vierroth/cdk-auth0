@@ -4,6 +4,7 @@ import { Secret } from "aws-cdk-lib/aws-secretsmanager";
 
 import { Auth0Props } from "../auth0-props";
 import { Provider } from "./provider";
+import { EventConnection } from "../events-connection";
 
 export interface JwtProps {
 	/**
@@ -233,6 +234,9 @@ export class Client extends CustomResource {
 	 */
 	public readonly clientDomain = this.getAttString("clientDomain");
 
+	public readonly tokenEndpointAuthMethod;
+	public readonly grantTypes;
+
 	constructor(scope: Construct, id: string, props: ClientProps) {
 		const clientSecretSecret = new Secret(scope, `${id}Secret`);
 
@@ -300,5 +304,11 @@ export class Client extends CustomResource {
 		});
 
 		this.clientSecret = clientSecretSecret;
+		this.tokenEndpointAuthMethod = props.tokenEndpointAuthMethod;
+		this.grantTypes = props.grantTypes;
+	}
+
+	newEventsConnection(scope: Construct, id: string) {
+		return new EventConnection(scope, id, { client: this });
 	}
 }

@@ -11,10 +11,10 @@
 	},
 	"dependencies": {
 		"@flit/cdk-auth0": "file:./../",
-		"@types/node": "^25.0.3",
-		"aws-cdk": "^2.1100.3",
-		"aws-cdk-lib": "^2.233.0",
-		"constructs": "^10.4.4",
+		"@types/node": "^25.0.9",
+		"aws-cdk": "^2.1101.0",
+		"aws-cdk-lib": "^2.235.1",
+		"constructs": "^10.4.5",
 		"typescript": "^5.9.3"
 	}
 }
