@@ -55,6 +55,7 @@ export class EventConnection extends Connection {
 			timeout: Duration.minutes(1),
 			memorySize: 128,
 			bundling: {
+				platform: "linux/arm64",
 				forcedDockerBundling: true,
 				goBuildFlags: ["-trimpath", `-ldflags="-s -w"`],
 			},
