@@ -13,6 +13,7 @@ import { LambdaFunction } from "aws-cdk-lib/aws-events-targets";
 
 import { Client } from "..";
 import { join } from "path";
+import { Architecture } from "aws-cdk-lib/aws-lambda";
 
 export interface EventConnectionProps {
 	readonly client: Client;
@@ -50,7 +51,13 @@ export class EventConnection extends Connection {
 
 		const updater = new GoFunction(this, "ConnectionSecretUpdater", {
 			entry: join(__dirname, "./handler").replace("/dist/", "/src/"),
+			architecture: Architecture.ARM_64,
 			timeout: Duration.minutes(1),
+			memorySize: 128,
+			bundling: {
+				forcedDockerBundling: true,
+				goBuildFlags: ["-trimpath", `-ldflags="-s -w"`],
+			},
 			environment: {
 				CONNECTION_NAME: this.connectionName,
 				AUTH0_SECRET_ID: props.client.clientSecret.secretArn,
