@@ -16,7 +16,7 @@ export interface ClientGrantProps extends Auth0Props {
  * @category Constructs
  */
 export class ClientGrant extends CustomResource {
-	public readonly actionId = this.getAttString("clinetGrantId");
+	public readonly actionId = this.getAttString("clientGrantId");
 
 	constructor(scope: Construct, id: string, props: ClientGrantProps) {
 		super(scope, id, {
