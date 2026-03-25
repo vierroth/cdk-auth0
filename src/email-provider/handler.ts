@@ -89,7 +89,17 @@ export async function handler(event: CdkCustomResourceEvent) {
 
 	switch (event.RequestType) {
 		case "Create": {
-			if (((await auth0.emails.provider.get()).name?.trim()?.length || 0) > 0) {
+			let isEmailProviderConfigured = false;
+
+			try {
+				isEmailProviderConfigured =
+					((await auth0.emails.provider.get()).name?.trim()?.length || 0) > 0;
+			} catch {
+				// The get throws with a 404 when no provider is configured
+				// do nothing, isEmailProviderConfigured is already false
+			}
+
+			if (isEmailProviderConfigured) {
 				await auth0.emails.provider.update({
 					name: event.ResourceProperties.name,
 					enabled: true,
