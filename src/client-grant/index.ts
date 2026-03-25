@@ -8,7 +8,7 @@ import { ResourceServer } from "./../resource-server";
 
 export interface ClientGrantProps extends Auth0Props {
 	readonly client: Client;
-	readonly audience?: ResourceServer;
+	readonly audience?: ResourceServer | string;
 	readonly scope: Array<string>;
 }
 
@@ -16,7 +16,7 @@ export interface ClientGrantProps extends Auth0Props {
  * @category Constructs
  */
 export class ClientGrant extends CustomResource {
-	public readonly actionId = this.getAttString("clinetGrantId");
+	public readonly actionId = this.getAttString("clientGrantId");
 
 	constructor(scope: Construct, id: string, props: ClientGrantProps) {
 		super(scope, id, {
@@ -25,7 +25,10 @@ export class ClientGrant extends CustomResource {
 			properties: {
 				secretName: props.apiSecret.secretName,
 				clinetId: props.client.clientId,
-				audience: props.audience?.resourceServerIdentifier,
+				audience:
+					typeof props.audience === "string"
+						? props.audience
+						: props.audience?.resourceServerIdentifier,
 				scope: props.scope,
 			},
 		});

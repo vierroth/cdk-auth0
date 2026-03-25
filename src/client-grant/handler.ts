@@ -40,7 +40,7 @@ export async function handler(event: CdkCustomResourceEvent) {
 			return {
 				PhysicalResourceId: id,
 				Data: {
-					clinetGrantId: id,
+					clientGrantId: id,
 				},
 			};
 		}
@@ -66,7 +66,7 @@ export async function handler(event: CdkCustomResourceEvent) {
 			return {
 				PhysicalResourceId: event.PhysicalResourceId,
 				Data: {
-					clinetGrantId: event.PhysicalResourceId,
+					clientGrantId: event.PhysicalResourceId,
 				},
 			};
 		}
