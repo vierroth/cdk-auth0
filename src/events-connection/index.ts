@@ -7,7 +7,7 @@ import {
 } from "aws-cdk-lib/aws-events";
 import { Construct } from "constructs";
 import { GoFunction } from "@aws-cdk/aws-lambda-go-alpha";
-import { Duration } from "aws-cdk-lib";
+import { DockerImage, Duration } from "aws-cdk-lib";
 import { PolicyStatement } from "aws-cdk-lib/aws-iam";
 import { LambdaFunction } from "aws-cdk-lib/aws-events-targets";
 
@@ -55,8 +55,18 @@ export class EventConnection extends Connection {
 			timeout: Duration.minutes(1),
 			memorySize: 128,
 			bundling: {
+				dockerImage: DockerImage.fromRegistry("golang:1.25"),
 				platform: "linux/arm64",
 				forcedDockerBundling: true,
+				environment: {
+					GOWORK: "off",
+					GOCACHE: "/tmp/go-build",
+					GOMODCACHE: "/tmp/go/pkg/mod",
+					CGO_ENABLED: "0",
+					GOOS: "linux",
+					GOARCH: "arm64",
+					GO111MODULE: "on",
+				},
 				goBuildFlags: ["-trimpath", `-ldflags="-s -w"`],
 			},
 			environment: {

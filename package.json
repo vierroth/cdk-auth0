@@ -1,6 +1,6 @@
 {
 	"name": "@flit/cdk-auth0",
-	"version": "1.20.2",
+	"version": "1.21.0",
 	"description": "A collection of AWS CDK constructs to manager your Auth0 resources programmatically",
 	"keywords": [
 		"aws",
@@ -61,24 +61,24 @@
 		"glob": "^13.0.0"
 	},
 	"dependencies": {
-		"auth0": "^5.2.0"
+		"auth0": "^5.3.1"
 	},
 	"devDependencies": {
-		"@aws-cdk/aws-lambda-go-alpha": "^2.235.1-alpha.0",
-		"@aws-sdk/client-secrets-manager": "^3.971.0",
+		"@aws-cdk/aws-lambda-go-alpha": "^2.238.0-alpha.0",
+		"@aws-sdk/client-secrets-manager": "^3.993.0",
 		"@types/aws-lambda": "^8.10.160",
-		"@types/node": "^25.0.9",
-		"aws-cdk-lib": "^2.235.1",
-		"constructs": "^10.4.5",
-		"jsii": "^5.9.23",
-		"jsii-pacmak": "^1.125.0",
-		"prettier": "^3.8.0",
+		"@types/node": "^25.3.0",
+		"aws-cdk-lib": "^2.238.0",
+		"constructs": "^10.5.0",
+		"jsii": "^5.9.27",
+		"jsii-pacmak": "^1.126.0",
+		"prettier": "^3.8.1",
 		"prettier-plugin-packagejson": "^3.0.0",
 		"typescript": "^5.9.3"
 	},
 	"peerDependencies": {
-		"aws-cdk-lib": "^2.235.1",
-		"constructs": "^10.4.5"
+		"aws-cdk-lib": "^2.238.0",
+		"constructs": "^10.5.0"
 	},
 	"bundleDependencies": [
 		"auth0"
