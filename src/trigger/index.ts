@@ -13,11 +13,13 @@ export interface TriggerProps extends Auth0Props {
 		| "post-user-registration"
 		| "post-change-password"
 		| "send-phone-message"
-		| "iga-approval"
-		| "iga-certification"
-		| "iga-fulfillment-assignment"
-		| "iga-fulfillment-execution"
-		| "password-reset-post-challenge";
+		| "password-reset-post-challenge"
+		| "custom-phone-provider"
+		| "custom-email-provider"
+		| "custom-token-exchange"
+		| "event-stream"
+		| "password-hash-migration"
+		| "mcp-tool";
 	readonly actions: Array<Action>;
 }
 

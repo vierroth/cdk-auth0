@@ -11,16 +11,18 @@ export interface ActionTriggerProps {
 	readonly id:
 		| "post-login"
 		| "credentials-exchange"
+		| "login-post-identifier"
+		| "signup-post-identifie"
 		| "pre-user-registration"
 		| "post-user-registration"
 		| "post-change-password"
 		| "send-phone-message"
 		| "password-reset-post-challenge"
-		| "login-post-identifier"
 		| "custom-phone-provider"
 		| "custom-email-provider"
 		| "custom-token-exchange"
-		| "event-stream";
+		| "event-stream"
+		| "password-hash-migration";
 	/**
 	 * The version of a trigger.
 	 */
@@ -79,7 +81,7 @@ export interface ActionProps extends Auth0Props {
 	 * The Node runtime
 	 * @default `"node22"`
 	 */
-	readonly runtime?: "node12" | "node18" | "node18-actions" | "node22";
+	readonly runtime?: "node18" | "node18-actions" | "node22";
 	/**
 	 * The list of secrets that are included in an action or a version of an action
 	 */

@@ -35,12 +35,35 @@ export async function handler(event: CdkCustomResourceEvent) {
 				signing_secret: event.ResourceProperties.signingSecret,
 				allow_offline_access:
 					event.ResourceProperties.allowOfflineAccess === "true",
+				allow_online_access:
+					event.ResourceProperties.allowOnlineAccess === "true",
 				token_lifetime: parseInt(event.ResourceProperties.tokenLifetime),
 				token_dialect: event.ResourceProperties.tokenDialect,
 				skip_consent_for_verifiable_first_party_clients:
 					event.ResourceProperties.skipConsentForVerifiableFirstPartyClients ===
 					"true",
 				enforce_policies: event.ResourceProperties.enforcePolicies === "true",
+				token_encryption: event.ResourceProperties.tokenEncryption
+					? {
+							format: event.ResourceProperties.tokenEncryption.format,
+							encryption_key: {
+								name: event.ResourceProperties.tokenEncryption.encryptionKey
+									.name,
+								alg: event.ResourceProperties.tokenEncryption.encryptionKey.alg,
+								pem: event.ResourceProperties.tokenEncryption.encryptionKey.pem,
+							},
+					  }
+					: undefined,
+				consent_policy: event.ResourceProperties.consentPolicy,
+				proof_of_possession: event.ResourceProperties.proofOfPossession
+					? {
+							mechanism: event.ResourceProperties.proofOfPossession.mechanism,
+							required:
+								event.ResourceProperties.proofOfPossession.required === "true",
+							required_for:
+								event.ResourceProperties.proofOfPossession.requiredFor,
+					  }
+					: undefined,
 			});
 
 			return {
@@ -61,12 +84,39 @@ export async function handler(event: CdkCustomResourceEvent) {
 					signing_secret: event.ResourceProperties.signingSecret,
 					allow_offline_access:
 						event.ResourceProperties.allowOfflineAccess === "true",
+					allow_online_access:
+						event.ResourceProperties.allowOnlineAccess === "true",
 					token_lifetime: parseInt(event.ResourceProperties.tokenLifetime),
+
 					token_dialect: event.ResourceProperties.tokenDialect,
 					skip_consent_for_verifiable_first_party_clients:
 						event.ResourceProperties
 							.skipConsentForVerifiableFirstPartyClients === "true",
 					enforce_policies: event.ResourceProperties.enforcePolicies === "true",
+					token_encryption: event.ResourceProperties.tokenEncryption
+						? {
+								format: event.ResourceProperties.tokenEncryption.format,
+								encryption_key: {
+									name: event.ResourceProperties.tokenEncryption.encryptionKey
+										.name,
+									alg: event.ResourceProperties.tokenEncryption.encryptionKey
+										.alg,
+									pem: event.ResourceProperties.tokenEncryption.encryptionKey
+										.pem,
+								},
+						  }
+						: undefined,
+					consent_policy: event.ResourceProperties.consentPolicy,
+					proof_of_possession: event.ResourceProperties.proofOfPossession
+						? {
+								mechanism: event.ResourceProperties.proofOfPossession.mechanism,
+								required:
+									event.ResourceProperties.proofOfPossession.required ===
+									"true",
+								required_for:
+									event.ResourceProperties.proofOfPossession.requiredFor,
+						  }
+						: undefined,
 				},
 			);
 

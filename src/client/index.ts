@@ -55,6 +55,45 @@ export interface RefreshTokenProps {
 	readonly infiniteIdleTokenLifetime?: boolean;
 }
 
+export interface OidcBackchannelLogoutInitiatorsProps {
+	readonly mode?: "custom" | "all";
+	readonly selectedInitiators?: Array<
+		| "rp-logout"
+		| "idp-logout"
+		| "password-changed"
+		| "session-expired"
+		| "session-revoked"
+		| "account-deleted"
+		| "email-identifier-changed"
+		| "mfa-phone-unenrolled"
+		| "account-deactivated"
+	>;
+}
+
+export interface OidcBackchannelLogoutSessionMetadataProps {
+	readonly include?: boolean;
+}
+
+export interface OidcLogoutProps {
+	readonly backchannelLogoutUrls?: string[];
+	readonly backchannelLogoutInitiators?: OidcBackchannelLogoutInitiatorsProps;
+	readonly backchannelLogoutSessionMetadata?: OidcBackchannelLogoutSessionMetadataProps;
+}
+
+export interface CredentialIdProps {
+	readonly id: string;
+}
+
+export interface ClientAuthenticationMethodCredentialProps {
+	readonly credentials: Array<CredentialIdProps>;
+}
+
+export interface ClientAuthenticationMethodProps {
+	readonly privateKeyJwt?: ClientAuthenticationMethodCredentialProps;
+	readonly tlsClientAuth?: ClientAuthenticationMethodCredentialProps;
+	readonly selfSignedTlsClientAuth?: ClientAuthenticationMethodCredentialProps;
+}
+
 export interface ClientProps extends Auth0Props {
 	/**
 	 * Name of this client (min length: 1 character, does not allow < or >)
@@ -111,7 +150,7 @@ export interface ClientProps extends Auth0Props {
 		| "http://auth0.com/oauth/grant-type/mfa-otp"
 		| "http://auth0.com/oauth/grant-type/mfa-recovery-code"
 		| "urn:openid:params:grant-type:ciba"
-		| "and urn:ietf:params:oauth:grant-type:device_code"
+		| "urn:ietf:params:oauth:grant-type:device_code"
 	>;
 	/**
 	 * Defines the requested authentication method for the token endpoint. Can be none (public client without a client secret), client_secret_post (client uses HTTP POST parameters), or client_secret_basic (client uses HTTP Basic)
@@ -120,7 +159,10 @@ export interface ClientProps extends Auth0Props {
 	readonly tokenEndpointAuthMethod?:
 		| "none"
 		| "client_secret_post"
-		| "client_secret_basic";
+		| "client_secret_basic"
+		| "private_key_jwt"
+		| "tls_client_auth"
+		| "self_signed_tls_client_auth";
 	/**
 	 * Type of client used to determine which settings are applicable
 	 */
@@ -215,6 +257,36 @@ export interface ClientProps extends Auth0Props {
 		| "no_prompt"
 		| "pre_login_prompt"
 		| "post_login_prompt";
+	/**
+	 * Methods for discovering the user's organization at the pre-login prompt.
+	 */
+	readonly organizationDiscoveryMethods?: Array<"email" | "organization_name">;
+	/**
+	 * OIDC Back-Channel Logout configuration.
+	 */
+	readonly oidcLogout?: OidcLogoutProps;
+	/**
+	 * Enforces Pushed Authorization Requests for this client.
+	 */
+	readonly requirePushedAuthorizationRequests?: boolean;
+	/**
+	 * Enforces Proof-of-Possession (DPoP or mTLS) for this client.
+	 */
+	readonly requireProofOfPossession?: boolean;
+	/**
+	 * Advanced client authentication methods (Private Key JWT, mTLS, self-signed mTLS).
+	 * Credentials must be pre-created via the Auth0 credentials API and referenced by ID.
+	 */
+	readonly clientAuthenticationMethods?: ClientAuthenticationMethodProps;
+	/**
+	 * FAPI compliance level for this client.
+	 */
+	readonly complianceLevel?:
+		| "none"
+		| "fapi1_adv_pkj_par"
+		| "fapi1_adv_mtls_par"
+		| "fapi2_sp_pkj_mtls"
+		| "fapi2_sp_mtls_mtls";
 }
 
 /**
@@ -300,6 +372,35 @@ export class Client extends CustomResource {
 					: undefined,
 				organizationUsage: props.organizationUsage,
 				organizationRequireBehavior: props.organizationRequireBehavior,
+				organizationDiscoveryMethods: props.organizationDiscoveryMethods,
+				oidcLogout: props.oidcLogout
+					? {
+							backchannelLogoutUrls: props.oidcLogout.backchannelLogoutUrls,
+							backchannelLogoutInitiators: props.oidcLogout
+								.backchannelLogoutInitiators
+								? {
+										mode: props.oidcLogout.backchannelLogoutInitiators.mode,
+										selectedInitiators:
+											props.oidcLogout.backchannelLogoutInitiators
+												.selectedInitiators,
+								  }
+								: undefined,
+							backchannelLogoutSessionMetadata:
+								props.oidcLogout.backchannelLogoutSessionMetadata,
+					  }
+					: undefined,
+				requirePushedAuthorizationRequests:
+					props.requirePushedAuthorizationRequests,
+				requireProofOfPossession: props.requireProofOfPossession,
+				clientAuthenticationMethods: props.clientAuthenticationMethods
+					? {
+							privateKeyJwt: props.clientAuthenticationMethods.privateKeyJwt,
+							tlsClientAuth: props.clientAuthenticationMethods.tlsClientAuth,
+							selfSignedTlsClientAuth:
+								props.clientAuthenticationMethods.selfSignedTlsClientAuth,
+					  }
+					: undefined,
+				complianceLevel: props.complianceLevel,
 			},
 		});
 

@@ -93,6 +93,66 @@ export async function handler(event: CdkCustomResourceEvent) {
 				organization_usage: event.ResourceProperties.organizationUsage,
 				organization_require_behavior:
 					event.ResourceProperties.organizationRequireBehavior,
+				organization_discovery_methods:
+					event.ResourceProperties.organizationDiscoveryMethods,
+				oidc_logout: event.ResourceProperties.oidcLogout
+					? {
+							backchannel_logout_urls:
+								event.ResourceProperties.oidcLogout.backchannelLogoutUrls,
+							backchannel_logout_initiators: event.ResourceProperties.oidcLogout
+								.backchannelLogoutInitiators
+								? {
+										mode: event.ResourceProperties.oidcLogout
+											.backchannelLogoutInitiators.mode,
+										selected_initiators:
+											event.ResourceProperties.oidcLogout
+												.backchannelLogoutInitiators.selectedInitiators,
+								  }
+								: undefined,
+							backchannel_logout_session_metadata:
+								event.ResourceProperties.oidcLogout
+									.backchannelLogoutSessionMetadata,
+					  }
+					: undefined,
+				require_pushed_authorization_requests:
+					"requirePushedAuthorizationRequests" in event.ResourceProperties
+						? event.ResourceProperties.requirePushedAuthorizationRequests ===
+						  "true"
+						: undefined,
+				require_proof_of_possession:
+					"requireProofOfPossession" in event.ResourceProperties
+						? event.ResourceProperties.requireProofOfPossession === "true"
+						: undefined,
+				client_authentication_methods: event.ResourceProperties
+					.clientAuthenticationMethods
+					? {
+							private_key_jwt: event.ResourceProperties
+								.clientAuthenticationMethods.privateKeyJwt
+								? {
+										credentials:
+											event.ResourceProperties.clientAuthenticationMethods
+												.privateKeyJwt.credentials,
+								  }
+								: undefined,
+							tls_client_auth: event.ResourceProperties
+								.clientAuthenticationMethods.tlsClientAuth
+								? {
+										credentials:
+											event.ResourceProperties.clientAuthenticationMethods
+												.tlsClientAuth.credentials,
+								  }
+								: undefined,
+							self_signed_tls_client_auth: event.ResourceProperties
+								.clientAuthenticationMethods.selfSignedTlsClientAuth
+								? {
+										credentials:
+											event.ResourceProperties.clientAuthenticationMethods
+												.selfSignedTlsClientAuth.credentials,
+								  }
+								: undefined,
+					  }
+					: undefined,
+				compliance_level: event.ResourceProperties.complianceLevel,
 			});
 
 			return {
@@ -170,6 +230,66 @@ export async function handler(event: CdkCustomResourceEvent) {
 				organization_usage: event.ResourceProperties.organizationUsage,
 				organization_require_behavior:
 					event.ResourceProperties.organizationRequireBehavior,
+				organization_discovery_methods:
+					event.ResourceProperties.organizationDiscoveryMethods,
+				oidc_logout: event.ResourceProperties.oidcLogout
+					? {
+							backchannel_logout_urls:
+								event.ResourceProperties.oidcLogout.backchannelLogoutUrls,
+							backchannel_logout_initiators: event.ResourceProperties.oidcLogout
+								.backchannelLogoutInitiators
+								? {
+										mode: event.ResourceProperties.oidcLogout
+											.backchannelLogoutInitiators.mode,
+										selected_initiators:
+											event.ResourceProperties.oidcLogout
+												.backchannelLogoutInitiators.selectedInitiators,
+								  }
+								: undefined,
+							backchannel_logout_session_metadata:
+								event.ResourceProperties.oidcLogout
+									.backchannelLogoutSessionMetadata,
+					  }
+					: undefined,
+				require_pushed_authorization_requests:
+					"requirePushedAuthorizationRequests" in event.ResourceProperties
+						? event.ResourceProperties.requirePushedAuthorizationRequests ===
+						  "true"
+						: undefined,
+				require_proof_of_possession:
+					"requireProofOfPossession" in event.ResourceProperties
+						? event.ResourceProperties.requireProofOfPossession === "true"
+						: undefined,
+				client_authentication_methods: event.ResourceProperties
+					.clientAuthenticationMethods
+					? {
+							private_key_jwt: event.ResourceProperties
+								.clientAuthenticationMethods.privateKeyJwt
+								? {
+										credentials:
+											event.ResourceProperties.clientAuthenticationMethods
+												.privateKeyJwt.credentials,
+								  }
+								: undefined,
+							tls_client_auth: event.ResourceProperties
+								.clientAuthenticationMethods.tlsClientAuth
+								? {
+										credentials:
+											event.ResourceProperties.clientAuthenticationMethods
+												.tlsClientAuth.credentials,
+								  }
+								: undefined,
+							self_signed_tls_client_auth: event.ResourceProperties
+								.clientAuthenticationMethods.selfSignedTlsClientAuth
+								? {
+										credentials:
+											event.ResourceProperties.clientAuthenticationMethods
+												.selfSignedTlsClientAuth.credentials,
+								  }
+								: undefined,
+					  }
+					: undefined,
+				compliance_level: event.ResourceProperties.complianceLevel,
 			});
 
 			const client = await auth0.clients.get(event.PhysicalResourceId);

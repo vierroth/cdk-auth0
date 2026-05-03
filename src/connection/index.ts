@@ -15,13 +15,13 @@ interface ConnectionBaseProps extends Auth0Props {
 	 * @default `"auth0"`
 	 */
 	readonly strategy?:
+		| "auth0-adldap"
 		| "ad"
 		| "adfs"
 		| "amazon"
 		| "apple"
 		| "dropbox"
 		| "bitbucket"
-		| "aol"
 		| "auth0-oidc"
 		| "auth0"
 		| "baidu"
@@ -36,7 +36,6 @@ interface ConnectionBaseProps extends Auth0Props {
 		| "exact"
 		| "facebook"
 		| "fitbit"
-		| "flickr"
 		| "github"
 		| "google-apps"
 		| "google-oauth2"
@@ -44,7 +43,6 @@ interface ConnectionBaseProps extends Auth0Props {
 		| "ip"
 		| "line"
 		| "linkedin"
-		| "miicard"
 		| "oauth1"
 		| "oauth2"
 		| "office365"
@@ -54,7 +52,6 @@ interface ConnectionBaseProps extends Auth0Props {
 		| "paypal-sandbox"
 		| "pingfederate"
 		| "planningcenter"
-		| "renren"
 		| "salesforce-community"
 		| "salesforce-sandbox"
 		| "salesforce"
@@ -64,8 +61,6 @@ interface ConnectionBaseProps extends Auth0Props {
 		| "shop"
 		| "sms"
 		| "soundcloud"
-		| "thecity-sandbox"
-		| "thecity"
 		| "thirtysevensignals"
 		| "twitter"
 		| "untappd"
@@ -75,7 +70,6 @@ interface ConnectionBaseProps extends Auth0Props {
 		| "windowslive"
 		| "wordpress"
 		| "yahoo"
-		| "yammer"
 		| "yandex";
 	/**
 	 * The identifiers of the clients for which the connection is to be enabled.
@@ -145,13 +139,13 @@ export interface ConnectionProps extends Auth0Props {
 	 * @default `"auth0"`
 	 */
 	readonly strategy?:
+		| "auth0-adldap"
 		| "ad"
 		| "adfs"
 		| "amazon"
 		| "apple"
 		| "dropbox"
 		| "bitbucket"
-		| "aol"
 		| "auth0-oidc"
 		| "auth0"
 		| "baidu"
@@ -166,7 +160,6 @@ export interface ConnectionProps extends Auth0Props {
 		| "exact"
 		| "facebook"
 		| "fitbit"
-		| "flickr"
 		| "github"
 		| "google-apps"
 		| "google-oauth2"
@@ -174,7 +167,6 @@ export interface ConnectionProps extends Auth0Props {
 		| "ip"
 		| "line"
 		| "linkedin"
-		| "miicard"
 		| "oauth1"
 		| "oauth2"
 		| "office365"
@@ -184,7 +176,6 @@ export interface ConnectionProps extends Auth0Props {
 		| "paypal-sandbox"
 		| "pingfederate"
 		| "planningcenter"
-		| "renren"
 		| "salesforce-community"
 		| "salesforce-sandbox"
 		| "salesforce"
@@ -194,8 +185,6 @@ export interface ConnectionProps extends Auth0Props {
 		| "shop"
 		| "sms"
 		| "soundcloud"
-		| "thecity-sandbox"
-		| "thecity"
 		| "thirtysevensignals"
 		| "twitter"
 		| "untappd"
@@ -205,7 +194,6 @@ export interface ConnectionProps extends Auth0Props {
 		| "windowslive"
 		| "wordpress"
 		| "yahoo"
-		| "yammer"
 		| "yandex";
 	/**
 	 * The identifiers of the clients for which the connection is to be enabled. If the array is empty or the property is not specified, no clients are enabled.
