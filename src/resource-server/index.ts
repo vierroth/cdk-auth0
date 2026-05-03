@@ -81,7 +81,7 @@ export class ResourceServer extends CustomResource {
 				signingAlg: props.signingAlg || "RS256",
 				signingSecret: props.signingSecret,
 				allowOfflineAccess: props.allowOfflineAccess || false,
-				allowOnlineAccess: props.allowOnlineAccess || false,
+				allowOnlineAccess: props.allowOnlineAccess,
 				tokenLifetime: props.tokenLifetime?.toSeconds() || 86400,
 				tokenDialect: props.tokenDialect || "access_token",
 				skipConsentForVerifiableFirstPartyClients:

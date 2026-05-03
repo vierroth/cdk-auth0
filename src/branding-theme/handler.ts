@@ -35,7 +35,7 @@ export async function handler(event: CdkCustomResourceEvent) {
 						base_hover_color: event.ResourceProperties.colors.baseHoverColor,
 						body_text: event.ResourceProperties.colors.bodyText,
 						captcha_widget_theme:
-							event.ResourceProperties.colors.bodyText.captchaWidgetTheme,
+							event.ResourceProperties.colors.captchaWidgetTheme,
 						error: event.ResourceProperties.colors.error,
 						header: event.ResourceProperties.colors.header,
 						icons: event.ResourceProperties.colors.icons,

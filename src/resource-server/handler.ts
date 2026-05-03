@@ -36,7 +36,9 @@ export async function handler(event: CdkCustomResourceEvent) {
 				allow_offline_access:
 					event.ResourceProperties.allowOfflineAccess === "true",
 				allow_online_access:
-					event.ResourceProperties.allowOnlineAccess === "true",
+					"allowOnlineAccess" in event.ResourceProperties
+						? event.ResourceProperties.allowOnlineAccess === "true"
+						: undefined,
 				token_lifetime: parseInt(event.ResourceProperties.tokenLifetime),
 				token_dialect: event.ResourceProperties.tokenDialect,
 				skip_consent_for_verifiable_first_party_clients:

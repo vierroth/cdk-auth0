@@ -12,7 +12,7 @@ export interface ActionTriggerProps {
 		| "post-login"
 		| "credentials-exchange"
 		| "login-post-identifier"
-		| "signup-post-identifie"
+		| "signup-post-identifier"
 		| "pre-user-registration"
 		| "post-user-registration"
 		| "post-change-password"
