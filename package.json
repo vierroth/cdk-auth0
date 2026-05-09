@@ -1,6 +1,6 @@
 {
 	"name": "@flit/cdk-auth0",
-	"version": "1.22.4",
+	"version": "1.23.0",
 	"description": "A collection of AWS CDK constructs to manager your Auth0 resources programmatically",
 	"keywords": [
 		"aws",
@@ -57,14 +57,11 @@
 		],
 		"useTabs": true
 	},
-	"overrides": {
-		"glob": "^13.0.0"
-	},
 	"dependencies": {
 		"auth0": "^5.9.1"
 	},
 	"devDependencies": {
-		"@aws-cdk/aws-lambda-go-alpha": "2.253.0-alpha.0",
+		"@aws-sdk/client-eventbridge": "^3.1044.0",
 		"@aws-sdk/client-secrets-manager": "^3.1044.0",
 		"@types/aws-lambda": "^8.10.161",
 		"@types/node": "^25.6.0",
@@ -77,7 +74,6 @@
 		"typescript": "^6.0.3"
 	},
 	"peerDependencies": {
-		"@aws-cdk/aws-lambda-go-alpha": "^2.253.0-alpha.0",
 		"aws-cdk-lib": "^2.253.0",
 		"constructs": "^10.6.0"
 	},

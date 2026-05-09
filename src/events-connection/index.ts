@@ -6,14 +6,12 @@ import {
 	Rule,
 } from "aws-cdk-lib/aws-events";
 import { Construct } from "constructs";
-import { GoFunction } from "@aws-cdk/aws-lambda-go-alpha";
-import { DockerImage, Duration } from "aws-cdk-lib";
 import { PolicyStatement } from "aws-cdk-lib/aws-iam";
 import { LambdaFunction } from "aws-cdk-lib/aws-events-targets";
+import { join } from "path";
 
 import { Client } from "..";
-import { join } from "path";
-import { Architecture, Runtime } from "aws-cdk-lib/aws-lambda";
+import { LambdaBase } from "../lambda-base";
 
 export interface EventConnectionProps {
 	readonly client: Client;
@@ -49,27 +47,8 @@ export class EventConnection extends Connection {
 			}),
 		});
 
-		const updater = new GoFunction(this, "ConnectionSecretUpdater", {
-			entry: join(__dirname, "./handler").replace("/dist/", "/src/"),
-			architecture: Architecture.ARM_64,
-			runtime: Runtime.PROVIDED_AL2023,
-			timeout: Duration.minutes(1),
-			memorySize: 128,
-			bundling: {
-				dockerImage: DockerImage.fromRegistry("golang:1.25"),
-				platform: "linux/arm64",
-				forcedDockerBundling: true,
-				environment: {
-					GOWORK: "off",
-					GOCACHE: "/tmp/go-build",
-					GOMODCACHE: "/tmp/go/pkg/mod",
-					CGO_ENABLED: "0",
-					GOOS: "linux",
-					GOARCH: "arm64",
-					GO111MODULE: "on",
-				},
-				goBuildFlags: ["-trimpath", `-ldflags="-s -w"`],
-			},
+		const updater = new LambdaBase(this, "ConnectionSecretUpdater", {
+			entry: join(__dirname, "./../../src/events-connection/handler.ts"),
 			environment: {
 				CONNECTION_NAME: this.connectionName,
 				AUTH0_SECRET_ID: props.client.clientSecret.secretArn,
