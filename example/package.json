@@ -11,9 +11,9 @@
 	},
 	"dependencies": {
 		"@flit/cdk-auth0": "file:./../",
-		"@types/node": "^25.6.0",
-		"aws-cdk": "^2.1120.0",
-		"aws-cdk-lib": "2.252.0",
+		"@types/node": "^25.6.2",
+		"aws-cdk": "^2.1121.0",
+		"aws-cdk-lib": "^2.253.1",
 		"constructs": "^10.6.0",
 		"typescript": "^6.0.3"
 	}
